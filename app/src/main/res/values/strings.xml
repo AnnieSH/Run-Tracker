@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">DEWatch</string>
+    <string name="hr_text">%1$d BPM</string>
+    <string name="o2_text">%1$d %%</string>
+    <string name="dist_text">%1$.2f km</string>
+    <string name="time_text">%1$d min %2$d sec</string>
+    <string name="speed_text">%.1f km/h</string>
+    <string name="avg_hr_text">%1$.1f BPM</string>
+    <string name="avg_o2_text">%1$.1f %%</string>
+    <string name="tab_text_1">Path</string>
+    <string name="tab_text_2">Graphs</string>
+    <string name="action_settings">Settings</string>
+    <string name="welcome_text">Hello, %1$s!</string>
+    <string name="last_run">You last ran %s</string>
+    <string name="last_run_stats">for %1$d min, %2$.1f km, at an average of %3$.1f km/h</string>
+    <string name="exercise_stat">%1s %2$d min %3$.1f km %4$.1f km/h</string>
+    <string name="exercise_stat_speed">Speed: %1s %2$d min %3$.1f km %4$4.1f km/h</string>
+    <string name="exercise_stat_dist">Distance: %1s %2$d min %3$.1f km %4$4.1f km/h</string>
+    <string name="exercise_stat_time">Time: %1s %2$d min %3$.1f km %4$4.1f km/h</string>
+    <string name="title_activity_overall_progress">OverallProgressActivity</string>
+</resources>

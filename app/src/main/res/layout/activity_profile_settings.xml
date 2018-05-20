@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.annie.dewatch.ProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/profile_settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Name : "
+                android:textColor="#000000"
+                android:padding="12dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First Name : "
+                android:textColor="#000000"
+                android:padding="12dp"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email : "
+                android:textColor="#000000"
+                android:padding="12dp"
+                android:layout_marginTop="6dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Age: "
+                android:textColor="#000000"
+                android:padding="12dp"
+                android:layout_marginTop="6dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weight(kg): "
+                android:textColor="#000000"
+                android:padding="12dp"
+                android:layout_marginTop="6dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:orientation="vertical"
+            android:paddingTop="15dp">
+
+
+            <TextView
+                android:id="@+id/profile_text_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/profile_text_firstname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:id="@+id/profile_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="6dp"/>
+
+            <TextView
+                android:id="@+id/profile_text_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Age"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="6dp"/>
+
+            <TextView
+                android:id="@+id/profile_text_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="weight"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="6dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:orientation="vertical"
+            android:paddingTop="15dp"
+            android:paddingLeft="1dp">
+
+
+            <ImageButton
+                android:id="@+id/profile_button_last"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/post_write"
+                android:background="@color/colorPrimary"
+                android:hint="weight"
+                android:onClick="editLastName"/>
+
+            <ImageButton
+                android:id="@+id/profile_button_firstname"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/post_write"
+                android:background="@color/colorPrimary"
+                android:hint="weight"
+                android:layout_marginTop="12dp"
+                android:onClick="editFirstName"/>
+
+            <ImageButton
+                android:id="@+id/profile_button_email"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/post_write"
+                android:background="@color/colorPrimary"
+                android:hint="weight"
+                android:layout_marginTop="12dp"
+                android:onClick="editEmail"/>
+
+            <ImageButton
+                android:id="@+id/profile_button_age"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/post_write"
+                android:background="@color/colorPrimary"
+                android:hint="weight"
+                android:layout_marginTop="12dp"
+                android:onClick="editAge"/>
+
+            <ImageButton
+                android:id="@+id/profile_button_weight"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/post_write"
+                android:background="@color/colorPrimary"
+                android:hint="weight"
+                android:layout_marginTop="12dp"
+                android:onClick="editWeight"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.annie.dewatch.StatResultsActivity">
+
+    <!--private String date;-->
+    <!--private String time;-->
+    <!--private float distance;-->
+    <!--private String time_traveled;-->
+    <!--private float avg_speed;-->
+    <!--private short avg_hr;-->
+    <!--private short avg_o2;-->
+
+    <TextView
+        android:id="@+id/stat_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="Time"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/stat_dist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:hint="Distance"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/stat_hr" />
+
+    <TextView
+        android:id="@+id/stat_time_traveled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Time Traveled"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/stat_dist"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/stat_avg_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="avg Speed"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stat_dist" />
+
+    <TextView
+        android:id="@+id/stat_hr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="avg HR"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/stat_time"
+        app:layout_constraintTop_toBottomOf="@+id/stat_time" />
+
+    <TextView
+        android:id="@+id/stat_o2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="avg O2"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/stat_hr"
+        app:layout_constraintTop_toBottomOf="@+id/stat_hr" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stat_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/stat_avg_speed"
+        tools:context="com.example.annie.dewatch.StatResultsActivity" />
+
+
+</android.support.constraint.ConstraintLayout>

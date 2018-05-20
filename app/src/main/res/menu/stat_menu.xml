@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_stat_sort"
+        android:title="Sort by"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menuSortDate"
+                android:title="Date" />
+            <item
+                android:id="@+id/menuSortTime"
+                android:title="Time" />
+            <item
+                android:id="@+id/menuSortDistance"
+                android:title="Distance" />
+            <item
+                android:id="@+id/menuSortSpeed"
+                android:title="Speed" />
+        </menu>
+    </item>
+</menu>

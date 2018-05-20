@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/login_background"
+    tools:context="com.example.annie.dewatch.LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/login_form"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:adjustViewBounds="false"
+            app:srcCompat="@drawable/logo"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/logo_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="DEWatch"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            tools:text="DEWatch" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25sp"
+            android:layout_marginRight="25sp"
+            android:layout_weight="0.1"
+            android:textColorHint="@color/lightGrey">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/login_editText_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/lightGrey"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:paddingLeft="20sp"
+                android:paddingRight="20sp"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:textColor="@color/colorPrimary"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25sp"
+            android:layout_marginRight="25sp"
+            android:layout_weight="0.1"
+            android:textColorHint="@color/lightGrey">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/login_editText_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingLeft="20sp"
+                android:paddingRight="20sp"
+                android:textColor="@color/colorPrimary"
+                android:backgroundTint="@color/lightGrey"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2" />
+
+        <Button
+            android:id="@+id/login_btn_login"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0sp"
+            android:layout_weight="0.1"
+            android:text="Login"
+            android:textColor="@color/lightGrey" />
+
+        <Button
+            android:id="@+id/signup_btn"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0sp"
+            android:layout_weight="0.1"
+            android:text="Signup"
+            android:textColor="@color/lightGrey" />
+
+    </LinearLayout>
+
+</LinearLayout>
