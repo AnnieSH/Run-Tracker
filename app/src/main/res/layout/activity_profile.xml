@@ -141,24 +141,5 @@
         android:text="Overall Progress"
         android:textColor="@color/colorPrimary" />
 
-    <Button
-        android:id="@+id/profile_button_voice_start"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Start Voice Recognition"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/exercise_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/profile_button_voice_stop"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="Stop Voice Recognition" />
-
 
 </LinearLayout>
