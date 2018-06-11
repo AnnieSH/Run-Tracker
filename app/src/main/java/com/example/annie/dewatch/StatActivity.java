@@ -43,7 +43,6 @@ public class StatActivity extends AppCompatActivity {
 
     private SimpleAdapter simpleAdapter;
 
-    //private List<Map<String, String>> recordsList;
     private List<HashMap<String, String>> recordsList;
     private List<StatData> resultDataObject;
 
@@ -63,7 +62,7 @@ public class StatActivity extends AppCompatActivity {
         currentUser = User.getCurrentUser();
 
         recordsList = new ArrayList<HashMap<String, String>>();
-        listView = (ListView) findViewById(R.id.stat_listview);
+        listView = findViewById(R.id.stat_listview);
         resultDataObject = new ArrayList<StatData>();
         attemptRecordRead();
     }

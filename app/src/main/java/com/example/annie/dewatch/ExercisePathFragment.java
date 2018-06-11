@@ -48,8 +48,6 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
 
         currentUser = User.getCurrentUser();
 
-        hrText = rootView.findViewById(R.id.hrText);
-        o2Text = rootView.findViewById(R.id.o2Text);
         timeText = rootView.findViewById(R.id.timeText);
         distText = rootView.findViewById(R.id.distanceText);
         speedText = rootView.findViewById(R.id.speed_text);
@@ -80,21 +78,17 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.2f));
     }
 
-    public void updateValues(int hr, int o2, double dist, int time) {
-        exerciseData.updateData(hr, o2, dist, time);
+    public void updateValues(double dist, int time) {
+        exerciseData.updateData(dist, time);
 
-        hrText.setText(String.format(getString(R.string.hr_text), hr));
-        o2Text.setText(String.format(getString(R.string.o2_text), o2));
         distText.setText(String.format(getString(R.string.dist_text), dist));
-        speedText.setText(String.format(getString(R.string.speed_text), exerciseData.speedsList.get(exerciseData.speedsList.size() - 1)));
+        speedText.setText(String.format(getString(R.string.speed_text), exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1)));
 
-        int min = exerciseData.totalTime / 60;
-        int sec = exerciseData.totalTime % 60;
+        int min = exerciseData.getTotalTime() / 60;
+        int sec = exerciseData.getTotalTime() % 60;
         timeText.setText(String.format(getString(R.string.time_text), min, sec + 1));
 
-        exGraphFrag.updateSpeedGraph(exerciseData.totalTime, exerciseData.speedsList.get(exerciseData.speedsList.size() - 1));
-        exGraphFrag.updateHrGraph(exerciseData.totalTime, hr);
-        exGraphFrag.updateO2Graph(exerciseData.totalTime, o2);
+        exGraphFrag.updateSpeedGraph(exerciseData.getTotalTime(), exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1));
     }
 
 }

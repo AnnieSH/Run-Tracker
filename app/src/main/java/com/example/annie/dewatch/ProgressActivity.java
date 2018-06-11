@@ -4,27 +4,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordRequestReadObject;
 import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordResponseObject;
 import com.example.annie.dewatch.deWatchClient.deWatchClient;
 import com.example.annie.dewatch.deWatchClient.deWatchServer;
-import com.google.common.graph.Graph;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,15 +27,11 @@ public class ProgressActivity extends AppCompatActivity {
 
     private LineGraphSeries distSeries;
     private LineGraphSeries timeSeries;
-    private LineGraphSeries hrSeries;
-    private LineGraphSeries o2Series;
     private LineGraphSeries speedSeries;
 
     private GraphView distGraph;
     private GraphView timeGraph;
     private GraphView speedGraph;
-    private GraphView hrGraph;
-    private GraphView o2Graph;
 
     int listSize;
 
@@ -70,12 +57,6 @@ public class ProgressActivity extends AppCompatActivity {
         speedGraph = findViewById(R.id.progress_speed_graph);
         graphSetup(speedGraph, "Speed", "Exercises", "km/h");
 
-        hrGraph = findViewById(R.id.progress_hr_graph);
-        graphSetup(hrGraph, "Heart Rate", "Exercises", "BPM");
-
-        o2Graph = findViewById(R.id.progress_o2_graph);
-        graphSetup(o2Graph, "Blood O2", "Exercises", "%");
-
         distSeries = new LineGraphSeries<>();
         distGraph.addSeries(distSeries);
 
@@ -84,13 +65,6 @@ public class ProgressActivity extends AppCompatActivity {
 
         speedSeries = new LineGraphSeries<>();
         speedGraph.addSeries(speedSeries);
-
-        hrSeries = new LineGraphSeries<>();
-        hrGraph.addSeries(hrSeries);
-
-        o2Series = new LineGraphSeries<>();
-        o2Graph.addSeries(o2Series);
-        o2Graph.getViewport().setMaxY(100);
 
         attemptRecordRead();
     }
@@ -133,8 +107,6 @@ public class ProgressActivity extends AppCompatActivity {
                     distSeries.appendData(new DataPoint(i + 1, distance), false, listSize);
                     timeSeries.appendData(new DataPoint(i + 1, min), false, listSize);
                     speedSeries.appendData(new DataPoint(i + 1, avg_speed), false, listSize);
-                    o2Series.appendData(new DataPoint(i + 1, avg_o2), false, listSize);
-                    hrSeries.appendData(new DataPoint(i + 1, avg_hr), false, listSize);
                 }
 
                 int minX;
@@ -154,14 +126,6 @@ public class ProgressActivity extends AppCompatActivity {
                 speedGraph.getViewport().setMaxY(speedSeries.getHighestValueY() + 0.1);
                 speedGraph.getViewport().setMinX(minX);
                 speedGraph.getViewport().setMaxX(listSize);
-
-                hrGraph.getViewport().setMaxY(hrSeries.getHighestValueY() + 5);
-                hrGraph.getViewport().setMinX(minX);
-                hrGraph.getViewport().setMaxX(listSize);
-
-                o2Graph.getViewport().setMinY(o2Series.getLowestValueY());
-                o2Graph.getViewport().setMinX(minX);
-                o2Graph.getViewport().setMaxX(listSize);
             }
 
             @Override

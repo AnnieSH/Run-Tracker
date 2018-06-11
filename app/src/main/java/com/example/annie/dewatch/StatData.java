@@ -1,13 +1,7 @@
 package com.example.annie.dewatch;
 
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.List;
 
 /**
  * Created by krisley3094 on 12/03/18.
@@ -27,7 +21,6 @@ public class StatData implements Parcelable {
     private String hrs;
     private String o2s;
     private String times_list;
-    //private PolylineOptions path;
 
     public StatData(String date, String time, float distance, String time_traveled,
                     float avg_speed, short avg_hr, short avg_o2, String gps_coord,

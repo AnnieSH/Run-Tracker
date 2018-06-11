@@ -51,7 +51,7 @@ public class ExerciseActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -70,7 +70,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 LatLng test = new LatLng(49.245167 + rand.nextInt(3) * 0.003, -123.115312 + rand.nextInt(3) * 0.003);
 
                 exPathFrag.addToPath(test);
-                exPathFrag.updateValues(97 + rand.nextInt(10), 96 + rand.nextInt(3), exerciseData.totalDist + 0.3, (int)(Calendar.getInstance().getTimeInMillis()/1000));
+                exPathFrag.updateValues(exerciseData.getTotalDist() + 0.3, (int)(Calendar.getInstance().getTimeInMillis()/1000));
                 return true;
             }
         });
@@ -78,7 +78,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -106,10 +106,9 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void endExercise() {
-        exerciseData.pathPoints = exerciseData.path.getPoints();
+        exerciseData.setPathPoints(exerciseData.path.getPoints());
 
         Intent intent = new Intent(getBaseContext(), ResultsActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear Activity stack
         startActivity(intent);
         this.finish();
     }

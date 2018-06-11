@@ -1,10 +1,8 @@
 package com.example.annie.dewatch;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -15,87 +13,86 @@ import java.util.List;
  */
 
 public class ExerciseData {
-
-    private String TAG = Config.APP_TAG + ": EXERCISE_DATA";
-
-    public double avgHr;
-    public double avgO2;
-    private int numValues = 0;
-    public double totalDist;
-    public int totalTime;
+    private double totalDist;
+    private int totalTime; // in seconds
+    private double avgSpeed;
     public PolylineOptions path;
-    public List<LatLng> pathPoints;
-    public ArrayList<Integer> hrsList;
-    public ArrayList<Integer> o2sList;
-    public ArrayList<Float> speedsList;
+    private List<LatLng> pathPoints;
+    private ArrayList<Double> speedsList;
     private ArrayList<Double> distList;
     public ArrayList<Integer> timeList;
 
-    private int last_time = 0;
-    private int lastTotalTime = 0;
-
-    public ExerciseData() {
-        avgHr = 0;
-        avgO2 = 0;
-        totalDist = 0.0;
+    ExerciseData() {
+        totalDist = 0;
         totalTime = 0;
-        pathPoints = null;
+        avgSpeed = 0;
+        setPathPoints(null);
         path = new PolylineOptions().
                 geodesic(true).
                 color(Color.rgb(0, 155, 224)).
                 width(10);
         distList = new ArrayList<>();
-        hrsList = new ArrayList<>();
-        o2sList = new ArrayList<>();
         speedsList = new ArrayList<>();
         timeList = new ArrayList<>();
     }
 
-    private void updateAverages(int hr, int o2) {
-        hrsList.add(hr);
-        o2sList.add(o2);
+    private double updateAverage(double stat, double average, ArrayList<Double> statList) {
+        statList.add(stat);
 
-        if(hr == 0 || o2 == 0)
-            return;
-
-        numValues++;
-        avgHr = avgHr + (hr - avgHr) / numValues;
-        avgO2 = avgO2 + (o2 - avgO2) / numValues;
+        if(stat == 0)
+            return average;
+        else {
+            return average + (stat - average) / statList.size();
+        }
     }
 
-    public void updateData(int hr, int o2, double dist, int time) {
-        if(time < 1520000432)
-            return;
+    private double updateTotal(double stat, ArrayList<Double> statList) {
+        statList.add(stat);
+        return stat;
+    }
 
-        if (last_time > 0 && time >= last_time) {
-            totalTime +=  time - last_time;
-        }
+    private int updateTotal(int stat, ArrayList<Integer> statList) {
+        statList.add(stat);
+        return stat;
+    }
 
-        int timeElapsed = totalTime - lastTotalTime;
-        double distCovered = dist - totalDist;
-
-        totalDist = dist;
-        last_time = time;
-        lastTotalTime = totalTime;
-
-        Log.e("time input",Integer.toString(time));
-        Log.e("time", Integer.toString(totalTime));
-
-        timeList.add(totalTime); // kriz
-
-        updateAverages(hr, o2);
-
-        distList.add(distCovered);
-
-        if(timeElapsed != 0) {
-            speedsList.add((float) (distCovered / timeElapsed) * 3600);
+    private double calculateSpeed(double dist, double time) {
+        if(time == 0) {
+            return 0;
         } else {
-            distList.add(0.0);
-            speedsList.add((float) 0.0);
+            return dist / time;
         }
+    }
 
-        Log.e("Distance", Double.toString(distList.get(distList.size()-1)));
-        Log.e("Speed", Double.toString(speedsList.get(speedsList.size() - 1)));
-        Log.e("Time elapsed", Integer.toString(timeElapsed));
+    public void updateData(double dist, int time) {
+        totalDist = updateTotal(dist, distList);
+        totalTime = updateTotal(time, timeList);
+        double currSpeed = calculateSpeed(totalDist, totalTime);
+
+        avgSpeed = updateAverage(currSpeed, avgSpeed, speedsList);
+    }
+
+    public double getTotalDist() {
+        return totalDist;
+    }
+
+    public int getTotalTime() {
+        return totalTime;
+    }
+
+    public List<LatLng> getPathPoints() {
+        return pathPoints;
+    }
+
+    public void setPathPoints(List<LatLng> pathPoints) {
+        this.pathPoints = pathPoints;
+    }
+
+    public ArrayList<Double> getSpeedsList() {
+        return speedsList;
+    }
+
+    public double getAvgSpeed() {
+        return avgSpeed;
     }
 }

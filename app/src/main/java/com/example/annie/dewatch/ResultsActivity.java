@@ -64,7 +64,6 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptRecordWrite();
                 saveLastExercise();
                 ResultsActivity.this.finish();
             }
@@ -72,23 +71,17 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
         TextView distText = findViewById(R.id.result_distance_text);
         TextView timeText = findViewById(R.id.result_time_text);
-        TextView hrText = findViewById(R.id.result_hr_text);
-        TextView o2Text = findViewById(R.id.result_o2_text);
         TextView speedText = findViewById(R.id.result_speed_text);
 
-        exerciseData.totalTime++;
+        distText.setText(String.format(getString(R.string.dist_text), exerciseData.getTotalDist()));
 
-        hrText.setText(String.format(getString(R.string.avg_hr_text), exerciseData.avgHr));
-        o2Text.setText(String.format(getString(R.string.avg_o2_text), exerciseData.avgO2));
-        distText.setText(String.format(getString(R.string.dist_text), exerciseData.totalDist));
-
-        int min = exerciseData.totalTime / 60;
-        int sec = exerciseData.totalTime % 60;
+        int min = exerciseData.getTotalTime() / 60;
+        int sec = exerciseData.getTotalTime() % 60;
         timeText.setText(String.format(getString(R.string.time_text), min, sec));
 
         float avgSpeed = 0;
-        if(exerciseData.totalTime != 0)
-            avgSpeed = (float) (exerciseData.totalDist/exerciseData.totalTime) * 3600;
+        if(exerciseData.getTotalTime() != 0)
+            avgSpeed = (float) (exerciseData.getTotalDist() / exerciseData.getTotalTime()) * 3600;
         speedText.setText(String.format(getString(R.string.speed_text), avgSpeed));
 
     }
@@ -99,8 +92,8 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
         map.addPolyline(exerciseData.path);
 
-        if(!exerciseData.pathPoints.isEmpty())
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(getPathCentre(exerciseData.pathPoints), 14.2f));
+        if(!exerciseData.getPathPoints().isEmpty())
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(getPathCentre(exerciseData.getPathPoints()), 14.2f));
     }
 
     @Override
@@ -126,51 +119,6 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         dialog.show();
     }
 
-    private void attemptRecordWrite() {
-        // Date : YYYY-MM-DD
-        // Time : HH:MM:SS
-        // Time Traveled : HH:MM:SS
-        // GPS Coordinates : JSON
-
-        Date c = Calendar.getInstance().getTime();
-        //System.out.println("Current time => " + c);
-
-        int hr = exerciseData.totalTime / 3600;
-        int min = exerciseData.totalTime / 60;
-        int sec = exerciseData.totalTime % 60;
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c);
-
-        String currentTimeString = new SimpleDateFormat("HH:mm:ss").format(new Date());
-
-        float avgSpeed = 0;
-        if(exerciseData.totalTime != 0)
-            avgSpeed = (float) (exerciseData.totalDist/exerciseData.totalTime) * 3600;
-
-        ExerciseRecordRequestWriteObject requestData = new ExerciseRecordRequestWriteObject(currentUser.getUid().toString(),
-                formattedDate, currentTimeString, (float) exerciseData.totalDist,
-                String.format("%02d", hr)+":"+String.format("%02d", min)+":"+String.format("%02d", sec), avgSpeed,
-                (short) exerciseData.avgHr, (short) exerciseData.avgO2, new Gson().toJson(exerciseData.pathPoints),
-                new Gson().toJson(exerciseData.speedsList), new Gson().toJson(exerciseData.hrsList), new Gson().toJson(exerciseData.o2sList),
-                new Gson().toJson(exerciseData.timeList));
-
-        deWatchClient client = deWatchServer.createService(deWatchClient.class);
-        Call<Void> call = client.writeExerRecords(requestData);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(ResultsActivity.this, "Write Record to DB Successful!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(ResultsActivity.this, "Failed!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "ERROR Write Record to DB" + t.getMessage());
-            }
-        });
-    }
-
     private void saveLastExercise() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String currDateString = df.format(Calendar.getInstance().getTime());
@@ -188,33 +136,33 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
         editor.putBoolean("hasStats", true);
 
-        int min = exerciseData.totalTime / 60;
+        int min = exerciseData.getTotalTime() / 60;
         double speed = 0;
-        if(exerciseData.totalTime > 0)
-            speed = exerciseData.totalDist / exerciseData.totalTime * 3600;
+        if(exerciseData.getTotalTime() > 0)
+            speed = exerciseData.getTotalDist() / exerciseData.getTotalTime() * 3600;
 
         editor.putLong("lastDate", currDate);
         editor.putInt("lastTime", min);
-        editor.putFloat("lastDistance", (float) exerciseData.totalDist);
+        editor.putFloat("lastDistance", (float) exerciseData.getTotalDist());
         editor.putFloat("lastSpeed", (float) speed);
 
-        if(exerciseData.totalDist > prefs.getFloat("bestDistDist", 0)) {
+        if(exerciseData.getTotalDist() > prefs.getFloat("bestDistDist", 0)) {
             editor.putString("bestDistDate", dateString);
             editor.putInt("bestDistTime", min);
-            editor.putFloat("bestDistDist", (float) exerciseData.totalDist);
+            editor.putFloat("bestDistDist", (float) exerciseData.getTotalDist());
             editor.putFloat("bestDistSpeed", (float) speed);
         }
         if(speed > prefs.getFloat("bestSpeedSpeed", 0)) {
             editor.putString("bestSpeedDate", dateString);
             editor.putInt("bestSpeedTime", min);
-            editor.putFloat("bestSpeedDist", (float) exerciseData.totalDist);
+            editor.putFloat("bestSpeedDist", (float) exerciseData.getTotalDist());
             editor.putFloat("bestSpeedSpeed", (float) speed);
         }
 
         if(min > prefs.getInt("bestTimeTime", 0)) {
             editor.putString("bestTimeDate", dateString);
             editor.putInt("bestTimeTime", min);
-            editor.putFloat("bestTimeDist", (float) exerciseData.totalDist);
+            editor.putFloat("bestTimeDist", (float) exerciseData.getTotalDist());
             editor.putFloat("bestTimeSpeed", (float) speed);
         }
 
