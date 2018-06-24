@@ -1,15 +1,17 @@
 package com.example.annie.dewatch;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -29,48 +31,63 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StatActivity extends AppCompatActivity {
 
-    private String TAG = Config.APP_TAG + ": STATS";
-    // User
-    private User currentUser;
+public class StatsFragment extends Fragment {
+    private String TAG = "STATS";
+    View rootView;
+    Context context;
+
+    User currentUser;
+
+    Toolbar toolbar;
 
     private ListView listView;
-
-    private SimpleAdapter simpleAdapter;
+    private int listSize;
 
     private List<HashMap<String, String>> recordsList;
     private List<StatData> resultDataObject;
 
-    private int listSize;
+    private SimpleAdapter simpleAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stat);
+    public StatsFragment() { }
 
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setTitle("Exercise Logs");
+    public static StatsFragment newInstance() {
+        StatsFragment fragment = new StatsFragment();
+        return fragment;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_stats, container, false);
+        context = getContext();
+        currentUser = User.getCurrentUser();
+        setHasOptionsMenu(true);
+
+        recordsList = new ArrayList<>();
+        listView = rootView.findViewById(R.id.stat_listview);
+        resultDataObject = new ArrayList<>();
+        attemptRecordRead();
+
+        return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        ((ProfileActivity) getActivity()).setActionBarTitle("Exercise Logs");
         inflater.inflate(R.menu.stat_menu, menu);
-        return true;
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
             case R.id.menuSortDate:
                 Collections.sort(recordsList, new Comparator<HashMap<String, String>>() {
                     @Override
@@ -163,7 +180,7 @@ public class StatActivity extends AppCompatActivity {
     }
 
     private HashMap<String, String> createHash(StatData data, String pos) {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("date", data.getDate().substring(0, 10));
         map.put("position", pos);
         map.put("time", data.getTime_traveled());
@@ -215,19 +232,19 @@ public class StatActivity extends AppCompatActivity {
                 Log.d(TAG, recordsList.toString());
                 initAdapter();
 
-                Toast.makeText(StatActivity.this, "Read Record from DB Successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Read Record from DB Successful!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<List<ExerciseRecordResponseObject>> call, Throwable t) {
-                Toast.makeText(StatActivity.this, "Failed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Failed!", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "error reading data" + t.getMessage());
             }
         });
     }
 
     public void initAdapter(){
-        simpleAdapter = new SimpleAdapter(StatActivity.this, recordsList, R.layout.list_item_stats,
+        simpleAdapter = new SimpleAdapter(context, recordsList, R.layout.list_item_stats,
                 new String[]{"date", "time", "dist", "speed"},
                 new int[]{R.id.textView_stats, R.id.list_subtext_time, R.id.list_subtext_dist,R.id.list_subtext_speed});
         listView.setAdapter(simpleAdapter);
@@ -239,13 +256,10 @@ public class StatActivity extends AppCompatActivity {
                 int pos = Integer.parseInt(posString);
 
                 Log.d(TAG, "Clicked " + pos);
-                Intent intent = new Intent(getBaseContext(), StatResultsActivity.class);
+                Intent intent = new Intent(context, StatResultsActivity.class);
                 intent.putExtra("RESULT_DATA_OBJECT", resultDataObject.get(pos));
                 startActivity(intent);
             }
         });
     }
-
-
-
 }

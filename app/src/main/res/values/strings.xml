@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">DEWatch</string>
-    <string name="hr_text">%1$d BPM</string>
-    <string name="o2_text">%1$d %%</string>
+    <string name="profile_nav_home">Home</string>
+    <string name="profile_nav_logs">Logs</string>
+    <string name="profile_nav_progress">Progress</string>
     <string name="dist_text">%1$.2f km</string>
     <string name="time_text">%1$d min %2$d sec</string>
     <string name="speed_text">%.1f km/h</string>
@@ -11,4 +12,7 @@
     <string name="last_run">You last ran %s</string>
     <string name="last_run_stats">for %1$d min, %2$.1f km, at an average of %3$.1f km/h</string>
     <string name="exercise_stat">%1s %2$d min %3$.1f km %4$.1f km/h</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

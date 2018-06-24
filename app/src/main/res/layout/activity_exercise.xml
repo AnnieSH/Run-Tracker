@@ -50,17 +50,4 @@
         android:src="@drawable/arrow"
         app:backgroundTint="@color/colorPrimaryDark"
         app:elevation="0dp" />
-
-    <Button
-        android:id="@+id/activity_exercise_voice_start"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom|start"
-        android:text="Voice Start" />
-    <Button
-        android:id="@+id/activity_exercise_voice_stop"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom|center"
-        android:text="Voice Stop" />
 </android.support.design.widget.CoordinatorLayout>

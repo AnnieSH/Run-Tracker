@@ -1,10 +1,14 @@
 package com.example.annie.dewatch;
 
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordRequestReadObject;
@@ -22,7 +26,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProgressActivity extends AppCompatActivity {
+public class ProgressFragment extends Fragment {
+    Context context;
     User currentUser;
 
     private LineGraphSeries distSeries;
@@ -35,26 +40,28 @@ public class ProgressActivity extends AppCompatActivity {
 
     int listSize;
 
+    public ProgressFragment() { }
+
+    public static ProgressFragment newInstance() {
+        ProgressFragment fragment = new ProgressFragment();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_progress);
-
-        Toolbar toolbar = findViewById(R.id.progress_toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setTitle("Overall Progress");
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_progress, container, false);
+        context = getContext();
         currentUser = User.getCurrentUser();
+        setHasOptionsMenu(true);
 
-        distGraph = findViewById(R.id.progress_dist_graph);
+        distGraph = rootView.findViewById(R.id.progress_dist_graph);
         graphSetup(distGraph, "Distance", "Exercises", "km");
 
-        timeGraph = findViewById(R.id.progress_time_graph);
+        timeGraph = rootView.findViewById(R.id.progress_time_graph);
         graphSetup(timeGraph, "Time", "Exercises", "min");
 
-        speedGraph = findViewById(R.id.progress_speed_graph);
+        speedGraph = rootView.findViewById(R.id.progress_speed_graph);
         graphSetup(speedGraph, "Speed", "Exercises", "km/h");
 
         distSeries = new LineGraphSeries<>();
@@ -67,6 +74,14 @@ public class ProgressActivity extends AppCompatActivity {
         speedGraph.addSeries(speedSeries);
 
         attemptRecordRead();
+        return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        ((ProfileActivity) getActivity()).setActionBarTitle("Progress");
+        menu.clear();
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void graphSetup(GraphView graph, String title, String x, String y) {
@@ -130,14 +145,8 @@ public class ProgressActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<ExerciseRecordResponseObject>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Server is down", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Server is down", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        finish();
-        return true;
     }
 }

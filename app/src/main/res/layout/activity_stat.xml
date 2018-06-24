@@ -7,24 +7,6 @@
     android:orientation="vertical"
     tools:context="com.example.annie.dewatch.StatActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/stat_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
-    <ListView
-        android:id="@+id/stat_listview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
-
-
-    </ListView>
 
 
 

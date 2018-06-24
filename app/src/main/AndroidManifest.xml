@@ -51,7 +51,6 @@
         <activity android:name=".StatResultsActivity" />
         <activity android:name=".ExerciseActivity" />
         <activity android:name=".ProfileSettingsActivity" />
-        <activity android:name=".ProgressActivity" />
 
     </application>
 

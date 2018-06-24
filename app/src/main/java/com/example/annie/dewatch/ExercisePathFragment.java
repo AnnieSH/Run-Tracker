@@ -52,8 +52,6 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         distText = rootView.findViewById(R.id.distanceText);
         speedText = rootView.findViewById(R.id.speed_text);
 
-        hrText.setText(String.format(getString(R.string.hr_text), 0));
-        o2Text.setText(String.format(getString(R.string.o2_text), 0));
         timeText.setText(String.format(getString(R.string.time_text), 0, 0));
         distText.setText(String.format(getString(R.string.dist_text), 0.0));
         speedText.setText(String.format(getString(R.string.speed_text), 0.0));
