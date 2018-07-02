@@ -1,10 +1,15 @@
 package com.example.annie.dewatch;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,36 +27,41 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nullable;
-
 public class ProfileFragment extends Fragment {
     View rootView;
     Context context;
     User currentUser;
 
     Toolbar toolbar;
+    ProfileActivity profileActivity;
+
+    private final int LOC_PERMISSION_CODE = 102;
 
     public ProfileFragment() { }
 
     public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
         currentUser = User.getCurrentUser();
+        profileActivity = (ProfileActivity) getActivity();
         setHasOptionsMenu(true);
 
         Button startButton = rootView.findViewById(R.id.profile_button_start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ExerciseActivity.class);
-                startActivity(intent);
+                if (ActivityCompat.checkSelfPermission(profileActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                   getLocationPermission();
+                } else {
+                    Intent intent = new Intent(context, ExerciseActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -62,7 +72,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        ((ProfileActivity) getActivity()).setActionBarTitle(String.format(getString(R.string.welcome_text), currentUser.getFirstName()));
+        profileActivity.setActionBarTitle(String.format(getString(R.string.welcome_text), currentUser.getFirstName()));
         inflater.inflate(R.menu.profile_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -157,6 +167,27 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(context, LoginActivity.class);
         startActivity(intent);
 
-        getActivity().finish();
+        profileActivity.finish();
+    }
+
+    /**
+     * Called when there is no location permission
+     *
+     * Asks for permission if we don't have it
+     * Tells user to manually grant permission if it's denied
+     * TODO: Handle when the user presses "Don't ask again"
+     */
+    private void getLocationPermission() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+
+        builder.setMessage("GPS permission is needed to track your path!")
+                .setPositiveButton("Okay!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ActivityCompat.requestPermissions(profileActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_PERMISSION_CODE);
+                    }
+                });
+
+        builder.create().show();
     }
 }

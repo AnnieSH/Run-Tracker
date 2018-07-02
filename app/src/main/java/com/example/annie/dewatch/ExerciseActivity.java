@@ -107,6 +107,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getBaseContext(), ResultsActivity.class);
         startActivity(intent);
+        exPathFrag.stopTimer();
         this.finish();
     }
 
@@ -118,14 +119,13 @@ public class ExerciseActivity extends AppCompatActivity {
                 .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        exPathFrag.stopTimer();
                         finish();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
                     }
                 });
 

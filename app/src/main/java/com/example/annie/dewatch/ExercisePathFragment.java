@@ -1,7 +1,11 @@
 package com.example.annie.dewatch;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +20,12 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.content.Context.LOCATION_SERVICE;
 import static com.example.annie.dewatch.ExerciseActivity.exGraphFrag;
 
 public class ExercisePathFragment extends Fragment implements OnMapReadyCallback {
+    private String TAG = "ExercisePathFragment";
+
     GoogleMap map;
     TextView timeText;
     TextView distText;
@@ -26,10 +33,8 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
 
     private Timer timer;
     private final int oneSecInMilli = 1000;
-    private int timeSec = 0;
 
-    // User
-    private User currentUser;
+    private LocationManager locationManager;
 
     public static ExerciseData exerciseData;
 
@@ -47,8 +52,8 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_exercise, container, false);
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
-        currentUser = User.getCurrentUser();
         timer = new Timer();
         timer.scheduleAtFixedRate(createTimer(), 0, oneSecInMilli);
 
@@ -72,12 +77,47 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+
+        try {
+            map.setMyLocationEnabled(true);
+            Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16.2f));
+            locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1, 5, getLocationListener());
+        } catch(SecurityException e) {
+            Log.e(TAG, "Path fragment opened without permission");
+        }
+    }
+
+    private LocationListener getLocationListener() {
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                addToPath(latLng);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
     }
 
     public void addToPath(LatLng point) {
         exerciseData.path.add(point);
         map.addPolyline(exerciseData.path);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.2f));
+        // todo: Calculate distance
     }
 
     public void updateDistance(double dist) {
@@ -109,6 +149,10 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
                 });
             }
         };
+    }
+
+    public void stopTimer() {
+        timer.cancel();
     }
 
 }

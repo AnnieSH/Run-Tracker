@@ -22,11 +22,9 @@ public class ExerciseData {
     private ArrayList<Double> distList;
     private ArrayList<Integer> timeList;
 
-    private int lastTime = 0;
-
     ExerciseData() {
         totalDist = 0;
-        totalTime = 0;
+        totalTime = -1;
         avgSpeed = 0;
         setPathPoints(null);
         path = new PolylineOptions().
