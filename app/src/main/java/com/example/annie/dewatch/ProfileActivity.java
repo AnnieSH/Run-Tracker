@@ -94,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private int numFragments = 3;
+        private int NUM_ITEMS = 3;
 
         final int HOME = 0;
         final int LOGS = 1;
@@ -125,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return numFragments;
+            return NUM_ITEMS;
         }
     }
 }

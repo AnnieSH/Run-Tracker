@@ -18,9 +18,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
  */
 
 public class ExerciseGraphFragment extends Fragment {
-
-    private LineGraphSeries hrSeries;
-    private LineGraphSeries o2Series;
     private LineGraphSeries speedSeries;
 
     public ExerciseGraphFragment() { }

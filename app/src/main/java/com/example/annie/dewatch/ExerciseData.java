@@ -20,7 +20,9 @@ public class ExerciseData {
     private List<LatLng> pathPoints;
     private ArrayList<Double> speedsList;
     private ArrayList<Double> distList;
-    public ArrayList<Integer> timeList;
+    private ArrayList<Integer> timeList;
+
+    private int lastTime = 0;
 
     ExerciseData() {
         totalDist = 0;
@@ -54,6 +56,16 @@ public class ExerciseData {
     private int updateTotal(int stat, ArrayList<Integer> statList) {
         statList.add(stat);
         return stat;
+    }
+
+    public void setTime(int time) {
+        totalTime = time;
+    }
+
+    public void setDistance(double distance) {
+        totalDist = distance;
+        avgSpeed = calculateSpeed(totalDist, totalTime);
+        speedsList.add(avgSpeed);
     }
 
     private double calculateSpeed(double dist, double time) {

@@ -26,9 +26,6 @@ public class ExerciseActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private ExercisePathFragment exPathFrag;
     public static ExerciseGraphFragment exGraphFrag;
@@ -42,9 +39,6 @@ public class ExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
         context = getApplicationContext();
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -70,13 +64,16 @@ public class ExerciseActivity extends AppCompatActivity {
                 LatLng test = new LatLng(49.245167 + rand.nextInt(3) * 0.003, -123.115312 + rand.nextInt(3) * 0.003);
 
                 exPathFrag.addToPath(test);
-                exPathFrag.updateValues(exerciseData.getTotalDist() + 0.3, (int)(Calendar.getInstance().getTimeInMillis()/1000));
+                exPathFrag.updateDistance(exerciseData.getTotalDist() + 0.3);
                 return true;
             }
         });
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        final int NUM_ITEMS = 2;
+        final int PATH = 0;
+        final int GRAPH = 1;
 
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -88,10 +85,10 @@ public class ExerciseActivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
 
             switch(position) {
-                case 0:
+                case PATH:
                     exPathFrag = ExercisePathFragment.newInstance();
                     return exPathFrag;
-                case 1:
+                case GRAPH:
                     exGraphFrag = ExerciseGraphFragment.newInstance();
                     return exGraphFrag;
             }
@@ -101,7 +98,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return NUM_ITEMS;
         }
     }
 
