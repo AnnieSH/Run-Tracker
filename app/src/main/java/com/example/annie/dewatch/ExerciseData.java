@@ -64,7 +64,7 @@ public class ExerciseData {
         if(time == 0) {
             return 0;
         } else {
-            return dist / time;
+            return dist / time * 3600;
         }
     }
 
