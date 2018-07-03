@@ -90,7 +90,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        map.addPolyline(exerciseData.path);
+        map.addPolyline(exerciseData.pathOptions);
 
         if(!exerciseData.getPathPoints().isEmpty())
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(getPathCentre(exerciseData.getPathPoints()), 14.2f));

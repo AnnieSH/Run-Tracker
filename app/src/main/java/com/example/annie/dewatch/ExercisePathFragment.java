@@ -82,8 +82,11 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         try {
             map.setMyLocationEnabled(true);
             Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16.2f));
+            if(loc != null) {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16.2f));
+            }
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2500, 0, getLocationListener());
+            exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
         }
@@ -94,7 +97,6 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onLocationChanged(Location location) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 addToPath(latLng);
             }
 
@@ -116,8 +118,8 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     }
 
     public void addToPath(LatLng point) {
-        exerciseData.path.add(point);
-        map.addPolyline(exerciseData.path);
+        exerciseData.getPathPoints().add(point);
+        exerciseData.path.setPoints(exerciseData.getPathPoints());
 
         List<LatLng> points = exerciseData.getPathPoints();
         int pathSize = points.size();
@@ -125,6 +127,8 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             double distance = ExerciseData.calculateDistance(points.get(pathSize - 2), points.get(pathSize - 1));
             updateDistance(distance);
         }
+
+        map.moveCamera(CameraUpdateFactory.newLatLng(point));
     }
 
     public void updateDistance(double dist) {

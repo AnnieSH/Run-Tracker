@@ -64,7 +64,6 @@ public class ExerciseActivity extends AppCompatActivity {
                 LatLng test = new LatLng(49.245167 + rand.nextInt(3) * 0.003, -123.115312 + rand.nextInt(3) * 0.003);
 
                 exPathFrag.addToPath(test);
-                exPathFrag.updateDistance(exerciseData.getTotalDist() + 0.3);
                 return true;
             }
         });

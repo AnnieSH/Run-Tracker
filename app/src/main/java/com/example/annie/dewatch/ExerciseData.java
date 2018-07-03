@@ -3,6 +3,7 @@ package com.example.annie.dewatch;
 import android.graphics.Color;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ public class ExerciseData {
     private double totalDist;
     private int totalTime; // in seconds
     private double avgSpeed;
-    public PolylineOptions path;
+    public PolylineOptions pathOptions;
+    public Polyline path;
     private List<LatLng> pathPoints;
     private ArrayList<Double> speedsList;
     private ArrayList<Double> distList;
@@ -26,14 +28,14 @@ public class ExerciseData {
         totalDist = 0;
         totalTime = -1;
         avgSpeed = 0;
-        setPathPoints(null);
-        path = new PolylineOptions().
+        pathOptions = new PolylineOptions().
                 geodesic(true).
                 color(Color.rgb(0, 155, 224)).
                 width(10);
         distList = new ArrayList<>();
         speedsList = new ArrayList<>();
         timeList = new ArrayList<>();
+        pathPoints = new ArrayList<>();
     }
 
     private double updateAverage(double stat, double average, ArrayList<Double> statList) {
@@ -75,7 +77,6 @@ public class ExerciseData {
     }
 
     public List<LatLng> getPathPoints() {
-        setPathPoints(path.getPoints());
         return pathPoints;
     }
 
