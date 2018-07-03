@@ -17,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -82,7 +83,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             map.setMyLocationEnabled(true);
             Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16.2f));
-            locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1, 5, getLocationListener());
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2500, 0, getLocationListener());
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
         }
@@ -117,13 +118,19 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     public void addToPath(LatLng point) {
         exerciseData.path.add(point);
         map.addPolyline(exerciseData.path);
-        // todo: Calculate distance
+
+        List<LatLng> points = exerciseData.getPathPoints();
+        int pathSize = points.size();
+        if(pathSize > 1) {
+            double distance = ExerciseData.calculateDistance(points.get(pathSize - 2), points.get(pathSize - 1));
+            updateDistance(distance);
+        }
     }
 
     public void updateDistance(double dist) {
         exerciseData.setDistance(dist);
 
-        distText.setText(String.format(getString(R.string.dist_text), dist));
+        distText.setText(String.format(getString(R.string.dist_text), exerciseData.getTotalDist()));
         speedText.setText(String.format(getString(R.string.speed_text), exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1)));
 
         exGraphFrag.updateSpeedGraph(exerciseData.getTotalTime(), exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1));

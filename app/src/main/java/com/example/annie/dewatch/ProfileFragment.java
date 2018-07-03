@@ -173,8 +173,6 @@ public class ProfileFragment extends Fragment {
     /**
      * Called when there is no location permission
      *
-     * Asks for permission if we don't have it
-     * Tells user to manually grant permission if it's denied
      * TODO: Handle when the user presses "Don't ask again"
      */
     private void getLocationPermission() {

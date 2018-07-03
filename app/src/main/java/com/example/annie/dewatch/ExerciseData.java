@@ -46,22 +46,14 @@ public class ExerciseData {
         }
     }
 
-    private double updateTotal(double stat, ArrayList<Double> statList) {
-        statList.add(stat);
-        return stat;
-    }
-
-    private int updateTotal(int stat, ArrayList<Integer> statList) {
-        statList.add(stat);
-        return stat;
-    }
-
     public void setTime(int time) {
         totalTime = time;
     }
 
-    public void setDistance(double distance) {
-        totalDist = distance;
+    public synchronized void setDistance(double distance) {
+        totalDist = distance + totalDist;
+        timeList.add(totalTime);
+        distList.add(distance);
         avgSpeed = calculateSpeed(totalDist, totalTime);
         speedsList.add(avgSpeed);
     }
@@ -74,14 +66,6 @@ public class ExerciseData {
         }
     }
 
-    public void updateData(double dist, int time) {
-        totalDist = updateTotal(dist, distList);
-        totalTime = updateTotal(time, timeList);
-        double currSpeed = calculateSpeed(totalDist, totalTime);
-
-        avgSpeed = updateAverage(currSpeed, avgSpeed, speedsList);
-    }
-
     public double getTotalDist() {
         return totalDist;
     }
@@ -91,6 +75,7 @@ public class ExerciseData {
     }
 
     public List<LatLng> getPathPoints() {
+        setPathPoints(path.getPoints());
         return pathPoints;
     }
 
@@ -104,5 +89,24 @@ public class ExerciseData {
 
     public double getAvgSpeed() {
         return avgSpeed;
+    }
+
+    /**
+     * Calculate the distance in metres between two LatLng
+     *
+     * @param p1 previous LatLng
+     * @param p2 new LatLng
+     * @return distance in km
+     */
+    public static double calculateDistance(LatLng p1, LatLng p2) {
+        final double D2R = Math.PI / 180.0;
+        final double EARTH_RADIUS = 6378.137;
+
+        double dLong = (p2.longitude - p1.longitude) * D2R;
+        double dLat = (p2.latitude - p1.latitude) * D2R;
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(p1.latitude * D2R) * Math.cos(p2.latitude * D2R) * Math.pow(Math.sin(dLong / 2), 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return c * EARTH_RADIUS;
     }
 }
