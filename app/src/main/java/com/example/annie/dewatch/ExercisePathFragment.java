@@ -85,7 +85,9 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             if(loc != null) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16.2f));
             }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2500, 0, getLocationListener());
+
+            // todo handle null location provider
+            locationManager.requestLocationUpdates(getLocationProvider(), 2500, 0, getLocationListener());
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
@@ -166,4 +168,12 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         timer.cancel();
     }
 
+    private String getLocationProvider() {
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            return LocationManager.NETWORK_PROVIDER;
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            return LocationManager.GPS_PROVIDER;
+        } else
+            return null;
+    }
 }

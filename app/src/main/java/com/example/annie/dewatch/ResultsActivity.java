@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -90,7 +91,8 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        map.addPolyline(exerciseData.pathOptions);
+        Polyline path = map.addPolyline(exerciseData.pathOptions);
+        path.setPoints(exerciseData.getPathPoints());
 
         if(!exerciseData.getPathPoints().isEmpty())
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(getPathCentre(exerciseData.getPathPoints()), 14.2f));
