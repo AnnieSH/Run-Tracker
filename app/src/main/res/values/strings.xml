@@ -1,4 +1,6 @@
 <resources>
+    <string name="initial_welcome">Welcome to DEWatch</string>
+    <string name="welcome_name_question">Let\'s get you started. What should we call you?</string>
     <string name="app_name">DEWatch</string>
     <string name="profile_nav_home">Home</string>
     <string name="profile_nav_logs">Logs</string>

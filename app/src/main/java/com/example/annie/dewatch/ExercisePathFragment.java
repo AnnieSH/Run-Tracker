@@ -1,9 +1,11 @@
 package com.example.annie.dewatch;
 
+import android.app.Activity;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import static com.example.annie.dewatch.ExerciseActivity.exGraphFrag;
 
 public class ExercisePathFragment extends Fragment implements OnMapReadyCallback {
     private String TAG = "ExercisePathFragment";
+    Activity activity;
 
     GoogleMap map;
     TextView timeText;
@@ -50,10 +53,11 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_exercise, container, false);
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        activity = getActivity();
+        locationManager = (LocationManager) activity.getSystemService(LOCATION_SERVICE);
 
         timer = new Timer();
         timer.scheduleAtFixedRate(createTimer(), 0, oneSecInMilli);
@@ -84,9 +88,16 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if(loc != null) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16.2f));
+            } else {
+                LatLng vancouver = new LatLng(49.2577143,-123.1939432);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(vancouver, 16.2f));
             }
 
             // todo handle null location provider
+            String locProvider = getLocationProvider();
+            if(locProvider == null) {
+
+            }
             locationManager.requestLocationUpdates(getLocationProvider(), 2500, 0, getLocationListener());
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
@@ -154,7 +165,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         return new TimerTask() {
             @Override
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         updateTime(exerciseData.getTotalTime() + 1);
@@ -175,5 +186,9 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             return LocationManager.GPS_PROVIDER;
         } else
             return null;
+    }
+
+    private void requestLocationOn() {
+        
     }
 }
