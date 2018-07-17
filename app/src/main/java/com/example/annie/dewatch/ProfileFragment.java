@@ -72,20 +72,26 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        profileActivity.setActionBarTitle(String.format(getString(R.string.welcome_text), currentUser.getFirstName()));
+        profileActivity.setActionBarTitle(String.format(getString(R.string.welcome_text), currentUser.getName()));
         inflater.inflate(R.menu.profile_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent activityIntent;
+
         switch (item.getItemId()) {
             case R.id.action_profile_settings:
-                Intent intent = new Intent(context, ProfileSettingsActivity.class);
-                startActivity(intent);
+                activityIntent = new Intent(context, ProfileSettingsActivity.class);
+                startActivity(activityIntent);
                 break;
             case R.id.action_profile_logout:
-                logout();
+                currentUser.logout(context);
+                activityIntent = new Intent(context, WelcomeActivity.class);
+                startActivity(activityIntent);
+                profileActivity.finish();
+                break;
         }
         return true;
     }
@@ -100,7 +106,7 @@ public class ProfileFragment extends Fragment {
     /**
      * Displays last exercise time and best records
      */
-    private void displayRecords() {
+    public void displayRecords() {
         TextView lastExercise = rootView.findViewById(R.id.last_exercise);
         TextView lastExerciseStats = rootView.findViewById(R.id.last_exercise_stats);
         TextView bestSpeedText = rootView.findViewById(R.id.best_speed_stats);
@@ -159,15 +165,6 @@ public class ProfileFragment extends Fragment {
                     prefs.getFloat("bestTimeSpeed", 0)));
         }
 
-    }
-
-    private void logout() {
-        currentUser.setLoggedOff(context);
-
-        Intent intent = new Intent(context, LoginActivity.class);
-        startActivity(intent);
-
-        profileActivity.finish();
     }
 
     /**

@@ -39,6 +39,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     private final int oneSecInMilli = 1000;
 
     private LocationManager locationManager;
+    private LocationListener locationListener;
 
     public static ExerciseData exerciseData;
 
@@ -98,7 +99,9 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             if(locProvider == null) {
 
             }
-            locationManager.requestLocationUpdates(getLocationProvider(), 2500, 0, getLocationListener());
+
+            locationListener = getLocationListener();
+            locationManager.requestLocationUpdates(getLocationProvider(), 2500, 0, locationListener);
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
@@ -177,6 +180,10 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
 
     public void stopTimer() {
         timer.cancel();
+    }
+
+    public void stopLocationListener() {
+        locationManager.removeUpdates(locationListener);
     }
 
     private String getLocationProvider() {

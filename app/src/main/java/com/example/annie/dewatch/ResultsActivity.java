@@ -161,8 +161,9 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
             editor.putFloat("bestSpeedSpeed", (float) speed);
         }
 
-        if(min > prefs.getInt("bestTimeTime", 0)) {
+        if(exerciseData.getTotalTime() > prefs.getInt("bestTimeSeconds", 0)) {
             editor.putString("bestTimeDate", dateString);
+            editor.putInt("bestTimeSeconds", exerciseData.getTotalTime());
             editor.putInt("bestTimeTime", min);
             editor.putFloat("bestTimeDist", (float) exerciseData.getTotalDist());
             editor.putFloat("bestTimeSpeed", (float) speed);

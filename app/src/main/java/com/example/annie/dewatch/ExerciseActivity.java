@@ -102,11 +102,13 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void endExercise() {
+        exPathFrag.stopTimer();
+        exPathFrag.stopLocationListener();
+
         exerciseData.setPathPoints(exerciseData.path.getPoints());
 
         Intent intent = new Intent(getBaseContext(), ResultsActivity.class);
         startActivity(intent);
-        exPathFrag.stopTimer();
         this.finish();
     }
 

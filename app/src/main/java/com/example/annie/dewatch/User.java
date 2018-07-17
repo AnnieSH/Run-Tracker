@@ -1,6 +1,7 @@
 package com.example.annie.dewatch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -12,6 +13,7 @@ import android.preference.PreferenceManager;
 public class User {
     private static User current_user = null;
 
+    private String name;
     private String first_name;
     private String last_name;
     private String email;
@@ -20,13 +22,16 @@ public class User {
     private String gender;
     private String uid;
 
-    protected User() {
+    public static String LOGGED_IN = "loggedIn";
+    public static String NAME = "name";
+    public static String UID = "uid";
 
-    }
+    protected User() {}
+
     public static User getCurrentUser(){
-        if(current_user == null){
+        if(current_user == null)
             current_user = new User();
-        }
+
         return current_user;
     }
 
@@ -39,6 +44,8 @@ public class User {
         this.gender = gender;
         this.uid = uid;
     }
+
+    public String getName() { return name; }
 
     public String getFirstName() { return first_name; }
 
@@ -99,7 +106,18 @@ public class User {
         editor.apply();
     }
 
-    public void setLoggedOff(Context context) {
+    public void logIn(String name, Context context) {
+        this.name = name;
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putBoolean(LOGGED_IN, true);
+        editor.putString(NAME, name);
+        editor.apply();
+    }
+
+    public void logout(Context context) {
         current_user = null;
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -107,6 +125,7 @@ public class User {
 
         // Remove user info
         editor.clear();
+        editor.putBoolean(LOGGED_IN, false);
         editor.apply();
     }
 

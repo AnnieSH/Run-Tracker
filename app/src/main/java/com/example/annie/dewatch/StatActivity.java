@@ -179,7 +179,7 @@ public class StatActivity extends AppCompatActivity {
         // Time Traveled : HH:MM:SS
         // GPS Coordinates : JSON
 
-        ExerciseRecordRequestReadObject requestData = new ExerciseRecordRequestReadObject(currentUser.getUid().toString(), null);
+        ExerciseRecordRequestReadObject requestData = new ExerciseRecordRequestReadObject(currentUser.getUid(), null);
 
         deWatchClient client = deWatchServer.createService(deWatchClient.class);
         Call<List<ExerciseRecordResponseObject>> call = client.readExerRecords(requestData);
