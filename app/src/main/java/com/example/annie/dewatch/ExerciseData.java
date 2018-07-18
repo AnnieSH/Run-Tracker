@@ -24,6 +24,30 @@ public class ExerciseData {
     private ArrayList<Double> distList;
     private ArrayList<Integer> timeList;
 
+    public static final String HAS_STATS = "hasStats";
+
+    public static final String LAST_DATE = "lastDate";
+    public static final String LAST_TIME = "lastTime";
+    public static final String LAST_DISTANCE = "lastDistance";
+    public static final String LAST_SPEED = "lastSpeed";
+
+    public static final String SPEED_RECORD_DATE = "speedRecordDate";
+    public static final String SPEED_RECORD_TIME = "speedRecordTime";
+    public static final String SPEED_RECORD_DISTANCE = "speedRecordDist";
+    public static final String SPEED_RECORD_SPEED = "speedRecordSpeed";
+
+    public static final String TIME_RECORD_DATE = "timeRecordDate";
+    public static final String TIME_RECORD_TIME = "timeRecordTime";
+    public static final String TIME_RECORD_TIME_SEC = "timeRecordSec";
+    public static final String TIME_RECORD_DISTANCE = "timeRecordDist";
+    public static final String TIME_RECORD_SPEED = "timeRecordSpeed";
+
+    public static final String DISTANCE_RECORD_DATE = "distRecordDate";
+    public static final String DISTANCE_RECORD_TIME = "distRecordTime";
+    public static final String DISTANCE_RECORD_DISTANCE = "distRecordDist";
+    public static final String DISTANCE_RECORD_SPEED = "distRecordSpeed";
+
+
     ExerciseData() {
         totalDist = 0;
         totalTime = -1;
@@ -60,6 +84,12 @@ public class ExerciseData {
         speedsList.add(avgSpeed);
     }
 
+    /**
+     *
+     * @param dist in km
+     * @param time in seconds
+     * @return speed in km/h
+     */
     private double calculateSpeed(double dist, double time) {
         if(time == 0) {
             return 0;

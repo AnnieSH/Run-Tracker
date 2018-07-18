@@ -136,37 +136,37 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putBoolean("hasStats", true);
+        editor.putBoolean(ExerciseData.HAS_STATS, true);
 
         int min = exerciseData.getTotalTime() / 60;
         double speed = 0;
         if(exerciseData.getTotalTime() > 0)
             speed = exerciseData.getTotalDist() / exerciseData.getTotalTime() * 3600;
 
-        editor.putLong("lastDate", currDate);
-        editor.putInt("lastTime", min);
-        editor.putFloat("lastDistance", (float) exerciseData.getTotalDist());
-        editor.putFloat("lastSpeed", (float) speed);
+        editor.putLong(ExerciseData.LAST_DATE, currDate);
+        editor.putInt(ExerciseData.LAST_TIME, min);
+        editor.putFloat(ExerciseData.LAST_DISTANCE, (float) exerciseData.getTotalDist());
+        editor.putFloat(ExerciseData.LAST_SPEED, (float) speed);
 
-        if(exerciseData.getTotalDist() > prefs.getFloat("bestDistDist", 0)) {
-            editor.putString("bestDistDate", dateString);
-            editor.putInt("bestDistTime", min);
-            editor.putFloat("bestDistDist", (float) exerciseData.getTotalDist());
-            editor.putFloat("bestDistSpeed", (float) speed);
+        if(exerciseData.getTotalDist() > prefs.getFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, -1)) {
+            editor.putString(ExerciseData.DISTANCE_RECORD_DATE, dateString);
+            editor.putInt(ExerciseData.DISTANCE_RECORD_TIME, min);
+            editor.putFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, (float) exerciseData.getTotalDist());
+            editor.putFloat(ExerciseData.DISTANCE_RECORD_SPEED, (float) speed);
         }
-        if(speed > prefs.getFloat("bestSpeedSpeed", 0)) {
-            editor.putString("bestSpeedDate", dateString);
-            editor.putInt("bestSpeedTime", min);
-            editor.putFloat("bestSpeedDist", (float) exerciseData.getTotalDist());
-            editor.putFloat("bestSpeedSpeed", (float) speed);
+        if(speed > prefs.getFloat(ExerciseData.SPEED_RECORD_SPEED, -1)) {
+            editor.putString(ExerciseData.SPEED_RECORD_DATE, dateString);
+            editor.putInt(ExerciseData.SPEED_RECORD_TIME, min);
+            editor.putFloat(ExerciseData.SPEED_RECORD_DISTANCE, (float) exerciseData.getTotalDist());
+            editor.putFloat(ExerciseData.SPEED_RECORD_SPEED, (float) speed);
         }
 
-        if(exerciseData.getTotalTime() > prefs.getInt("bestTimeSeconds", 0)) {
-            editor.putString("bestTimeDate", dateString);
-            editor.putInt("bestTimeSeconds", exerciseData.getTotalTime());
-            editor.putInt("bestTimeTime", min);
-            editor.putFloat("bestTimeDist", (float) exerciseData.getTotalDist());
-            editor.putFloat("bestTimeSpeed", (float) speed);
+        if(exerciseData.getTotalTime() > prefs.getInt(ExerciseData.TIME_RECORD_TIME_SEC, -1)) {
+            editor.putString(ExerciseData.TIME_RECORD_DATE, dateString);
+            editor.putInt(ExerciseData.TIME_RECORD_TIME_SEC, exerciseData.getTotalTime());
+            editor.putInt(ExerciseData.TIME_RECORD_TIME, min);
+            editor.putFloat(ExerciseData.TIME_RECORD_DISTANCE, (float) exerciseData.getTotalDist());
+            editor.putFloat(ExerciseData.TIME_RECORD_SPEED, (float) speed);
         }
 
         editor.apply();

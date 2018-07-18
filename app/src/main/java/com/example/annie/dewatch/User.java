@@ -22,9 +22,9 @@ public class User {
     private String gender;
     private String uid;
 
-    public static String LOGGED_IN = "loggedIn";
-    public static String NAME = "name";
-    public static String UID = "uid";
+    public static final String LOGGED_IN = "loggedIn";
+    public static final String NAME = "name";
+    public static final String UID = "uid";
 
     protected User() {}
 
@@ -62,8 +62,8 @@ public class User {
     public String getUid() { return uid; }
 
 
-    public void setFirstName(String first_name) {
-        this.first_name = first_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setLastName(String last_name) {

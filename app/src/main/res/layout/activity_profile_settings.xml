@@ -39,41 +39,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Last Name : "
-                android:textColor="#000000"
-                android:padding="12dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="First Name : "
-                android:textColor="#000000"
                 android:padding="12dp"
-                android:layout_marginTop="5dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email : "
-                android:textColor="#000000"
-                android:padding="12dp"
-                android:layout_marginTop="6dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Age: "
-                android:textColor="#000000"
-                android:padding="12dp"
-                android:layout_marginTop="6dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weight(kg): "
-                android:textColor="#000000"
-                android:padding="12dp"
-                android:layout_marginTop="6dp"/>
+                android:text="Name"
+                android:textColor="#000000" />
 
         </LinearLayout>
 
@@ -86,48 +54,11 @@
 
 
             <TextView
-                android:id="@+id/profile_text_lastname"
+                android:id="@+id/profile_settings_edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"/>
-
-            <TextView
-                android:id="@+id/profile_text_firstname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="First Name"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:layout_marginTop="5dp"/>
-
-            <TextView
-                android:id="@+id/profile_text_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:layout_marginTop="6dp"/>
-
-            <TextView
-                android:id="@+id/profile_text_age"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Age"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:layout_marginTop="6dp"/>
-
-            <TextView
-                android:id="@+id/profile_text_weight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="weight"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:layout_marginTop="6dp"/>
 
         </LinearLayout>
 
@@ -144,50 +75,9 @@
                 android:id="@+id/profile_button_last"
                 android:layout_width="37dp"
                 android:layout_height="37dp"
-                android:src="@mipmap/post_write"
-                android:background="@color/colorPrimary"
                 android:hint="weight"
-                android:onClick="editLastName"/>
-
-            <ImageButton
-                android:id="@+id/profile_button_firstname"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
-                android:src="@mipmap/post_write"
-                android:background="@color/colorPrimary"
-                android:hint="weight"
-                android:layout_marginTop="12dp"
-                android:onClick="editFirstName"/>
-
-            <ImageButton
-                android:id="@+id/profile_button_email"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
-                android:src="@mipmap/post_write"
-                android:background="@color/colorPrimary"
-                android:hint="weight"
-                android:layout_marginTop="12dp"
-                android:onClick="editEmail"/>
-
-            <ImageButton
-                android:id="@+id/profile_button_age"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
-                android:src="@mipmap/post_write"
-                android:background="@color/colorPrimary"
-                android:hint="weight"
-                android:layout_marginTop="12dp"
-                android:onClick="editAge"/>
-
-            <ImageButton
-                android:id="@+id/profile_button_weight"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
-                android:src="@mipmap/post_write"
-                android:background="@color/colorPrimary"
-                android:hint="weight"
-                android:layout_marginTop="12dp"
-                android:onClick="editWeight"/>
+                android:onClick="editName"
+                android:src="@mipmap/post_write" />
 
         </LinearLayout>
 

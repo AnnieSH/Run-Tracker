@@ -142,27 +142,27 @@ public class ProfileFragment extends Fragment {
                 lastExercise.setText(String.format(getString(R.string.last_run), daysDiff + " days ago"));
 
             lastExerciseStats.setText(String.format(getString(R.string.last_run_stats),
-                    prefs.getInt("lastTime", 0),
-                    prefs.getFloat("lastDistance", 0),
-                    prefs.getFloat("lastSpeed", 0)));
+                    prefs.getInt(ExerciseData.LAST_TIME, 0),
+                    prefs.getFloat(ExerciseData.LAST_DISTANCE, 0),
+                    prefs.getFloat(ExerciseData.LAST_SPEED, 0)));
 
             bestSpeedText.setText(String.format(getString(R.string.exercise_stat),
-                    prefs.getString("bestSpeedDate", ""),
-                    prefs.getInt("bestSpeedTime", 0),
-                    prefs.getFloat("bestSpeedDist", 0),
-                    prefs.getFloat("bestSpeedSpeed", 0)));
+                    prefs.getString(ExerciseData.SPEED_RECORD_DATE, ""),
+                    prefs.getInt(ExerciseData.SPEED_RECORD_TIME, 0),
+                    prefs.getFloat(ExerciseData.SPEED_RECORD_DISTANCE, 0),
+                    prefs.getFloat(ExerciseData.SPEED_RECORD_SPEED, 0)));
 
             bestDistText.setText(String.format(getString(R.string.exercise_stat),
-                    prefs.getString("bestDistDate", ""),
-                    prefs.getInt("bestDistTime", 0),
-                    prefs.getFloat("bestDistDist", 0),
-                    prefs.getFloat("bestDistSpeed", 0)));
+                    prefs.getString(ExerciseData.DISTANCE_RECORD_DATE, ""),
+                    prefs.getInt(ExerciseData.DISTANCE_RECORD_TIME, 0),
+                    prefs.getFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, 0),
+                    prefs.getFloat(ExerciseData.DISTANCE_RECORD_SPEED, 0)));
 
             bestTimeText.setText(String.format(getString(R.string.exercise_stat),
-                    prefs.getString("bestTimeDate", ""),
-                    prefs.getInt("bestTimeTime", 0),
-                    prefs.getFloat("bestTimeDist", 0),
-                    prefs.getFloat("bestTimeSpeed", 0)));
+                    prefs.getString(ExerciseData.TIME_RECORD_DATE, ""),
+                    prefs.getInt(ExerciseData.TIME_RECORD_TIME, 0),
+                    prefs.getFloat(ExerciseData.TIME_RECORD_DISTANCE, 0),
+                    prefs.getFloat(ExerciseData.TIME_RECORD_SPEED, 0)));
         }
 
     }
