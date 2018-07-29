@@ -95,14 +95,9 @@ public class User {
         final SharedPreferences.Editor editor = prefs.edit();
 
         // Save user info
-        editor.putBoolean("loggedIn", true);
-        editor.putString("email", email);
-        editor.putString("firstName", first_name);
-        editor.putString("lastName", last_name);
-        editor.putString("age", age);
-        editor.putString("weight", weight);
-        editor.putString("gender", gender);
-        editor.putString("uid", uid);
+        editor.putBoolean(LOGGED_IN, true);
+        editor.putString(NAME, current_user.name);
+        editor.putString(UID, uid);
         editor.apply();
     }
 

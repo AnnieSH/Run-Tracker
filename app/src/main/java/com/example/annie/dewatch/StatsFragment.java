@@ -73,7 +73,6 @@ public class StatsFragment extends Fragment {
         recordsList = new ArrayList<>();
         listView = rootView.findViewById(R.id.stat_listview);
         resultDataObject = new ArrayList<>();
-        attemptRecordRead();
 
         return rootView;
     }
@@ -188,59 +187,6 @@ public class StatsFragment extends Fragment {
         map.put("speed", String.format(getString(R.string.speed_text), data.getAvg_speed()));
 
         return map;
-    }
-
-    private void attemptRecordRead() {
-        // Date : YYYY-MM-DD
-        // Time : HH:MM:SS
-        // Time Traveled : HH:MM:SS
-        // GPS Coordinates : JSON
-
-        ExerciseRecordRequestReadObject requestData = new ExerciseRecordRequestReadObject(currentUser.getUid(), null);
-
-        deWatchClient client = deWatchServer.createService(deWatchClient.class);
-        Call<List<ExerciseRecordResponseObject>> call = client.readExerRecords(requestData);
-        call.enqueue(new Callback<List<ExerciseRecordResponseObject>>() {
-            @Override
-            public void onResponse(Call<List<ExerciseRecordResponseObject>> call, Response<List<ExerciseRecordResponseObject>> response) {
-                listSize = response.body().size();
-
-                if(listSize == 0)
-                    return;
-
-                for (int i = listSize-1; i >= 0; i--) { // Most recent first
-                    String date = response.body().get(i).getDate();
-                    String time = response.body().get(i).getTime();
-                    float distance = response.body().get(i).getDistance();
-                    String time_traveled = response.body().get(i).getTime_traveled();
-                    float avg_speed = response.body().get(i).getAvg_speed();
-                    short avg_hr = response.body().get(i).getAvg_hr();
-                    short avg_o2 = response.body().get(i).getAvg_o2();
-                    String gps_coord = response.body().get(i).getGps_coord();
-                    String speeds = response.body().get(i).getSpeeds();
-                    String hrs = response.body().get(i).getHrs();
-                    String o2s = response.body().get(i).getO2s();
-                    String timesList = response.body().get(i).getTime_list();
-
-                    StatData tempData = new StatData(date, time, distance, time_traveled,
-                            avg_speed, avg_hr, avg_o2, gps_coord, speeds, hrs, o2s, timesList);
-
-                    recordsList.add(createHash(tempData, Integer.toString(listSize - i - 1)));
-                    resultDataObject.add(tempData);
-                }
-
-                Log.d(TAG, recordsList.toString());
-                initAdapter();
-
-                Toast.makeText(context, "Read Record from DB Successful!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<List<ExerciseRecordResponseObject>> call, Throwable t) {
-                Toast.makeText(context, "Failed!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "error reading data" + t.getMessage());
-            }
-        });
     }
 
     public void initAdapter(){
