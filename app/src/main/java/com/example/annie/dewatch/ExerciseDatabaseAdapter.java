@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 
 public final class ExerciseDatabaseAdapter {
@@ -31,8 +32,8 @@ public final class ExerciseDatabaseAdapter {
     public static final String COLUMN_NAME_COORDINATES = "coordinates";
 
     public static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE IF NOT EXISTS" + TABLE_NAME + " (" +
-                    "id" + " INTEGER PRIMARY KEY," +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                    ExerciseDataEntry._ID + " INTEGER PRIMARY KEY," +
                     COLUMN_NAME_DATE + " TEXT," +
                     COLUMN_NAME_TIME + " INTEGER," +
                     COLUMN_NAME_DISTANCE + " REAL," +
@@ -102,11 +103,14 @@ public final class ExerciseDatabaseAdapter {
     public ExerciseData getExerciseEntry(int id) {
         ExerciseData exercise = new ExerciseData();
 
-        Cursor cursor = db.query(TABLE_NAME, null, ExerciseDataEntry._ID + "=?", new String[] {Integer.toString(id)}, null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
 
+        Log.d("getExercise", "num " +  cursor.getCount());
         if(cursor.getCount() < 1) return null;
 
+        cursor.moveToFirst();
         exercise.setDistance(cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DISTANCE)));
+        cursor.close();
 
         return exercise;
     }

@@ -75,26 +75,16 @@ public class StatsFragment extends Fragment {
 
     private void readDb() {
         Log.d("DB", "READ");
-        ExerciseDataDbHelper mDbHelper = new ExerciseDataDbHelper(context);
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
+        dbAdapter.openReadable();
+        ExerciseData data = dbAdapter.getExerciseEntry(1);
 
-        String selection = ExerciseDatabaseAdapter.ExerciseDataEntry.COLUMN_NAME_DATE + " = ?";
-        String sortOrder = ExerciseDatabaseAdapter.ExerciseDataEntry.COLUMN_NAME_DATE + " DESC";
+        if(data != null)
+            Log.d("DB", "READ DISTANCE " + data.getTotalDist());
+        else
+            Log.d("DB", "is null");
 
-        Cursor cursor = db.query(
-                ExerciseDatabaseAdapter.ExerciseDataEntry.TABLE_NAME,
-                null,
-                selection,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-
-        while(cursor.moveToNext()) {
-            Log.d("DB", "Read ENTRY");
-            Log.d("DB", cursor.getString(cursor.getColumnIndexOrThrow(ExerciseDatabaseAdapter.ExerciseDataEntry.COLUMN_NAME_DATE)));
-        }
+        dbAdapter.close();
     }
 
     @Override
