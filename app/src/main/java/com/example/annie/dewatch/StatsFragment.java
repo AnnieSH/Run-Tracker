@@ -38,14 +38,20 @@ public class StatsFragment extends Fragment {
     Toolbar toolbar;
 
     private ListView listView;
-    private int listSize;
 
     private List<HashMap<String, String>> recordsList;
     private List<StatData> resultDataObject;
 
-    private List<ExerciseData> exerciseLogs;
-
     private SimpleAdapter simpleAdapter;
+
+    private final String HASH_KEY_DIST = "dist";
+    private final String HASH_KEY_SPEED = "speed";
+    private final String HASH_KEY_DATE = "date";
+    private final String HASH_KEY_TIME = "time";
+    private final String HASH_KEY_TIME_FORMATTED = "timeFormatted";
+    private final String HASH_KEY_DIST_RAW = "distanceRaw";
+    private final String HASH_KEY_SPEED_RAW = "speedRaw";
+    private final String HASH_KEY_DATE_FULL = "dateFull";
 
     public StatsFragment() { }
 
@@ -66,52 +72,58 @@ public class StatsFragment extends Fragment {
         listView = rootView.findViewById(R.id.stat_listview);
         resultDataObject = new ArrayList<>();
 
+        readDb();
+
         return rootView;
     }
 
+    // todo: DB wont be read when an exercise is finished - fix this
     private void readDb() {
         Log.d("DB", "READ");
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
+
         dbAdapter.openReadable();
-        ExerciseData data = dbAdapter.getExerciseEntry(1);
-
-        if(data != null)
-            Log.d("DB", "READ DISTANCE " + data.getTotalDist());
-        else
-            Log.d("DB", "is null");
-
+        List<ExerciseData> allEntries = dbAdapter.getAllExerciseEntries();
         dbAdapter.close();
 
-        if(data != null) {
+        if (allEntries == null) {
+            Log.e("DB", "is null");
+            return;
+        }
+
+        for(ExerciseData data : allEntries) {
             recordsList.add(createHash(data));
             resultDataObject.add(new StatData(data.getDate(), data.getTotalTime(), data.getTotalDist(), data.getAvgSpeed(), ""));
-            initAdapter();
         }
+
+        initAdapter();
     }
 
     private HashMap<String, String> createHash(ExerciseData data) {
         HashMap<String, String> map = new HashMap<>();
-        map.put("date", data.getDate().substring(0, 10));
-        map.put("time", Integer.toString(data.getTotalTime()));
-        map.put("dist", String.format(getString(R.string.dist_text),data.getTotalDist()));
-        map.put("speed", String.format(getString(R.string.speed_text), data.getAvgSpeed()));
+        map.put(HASH_KEY_DATE, data.getDate().substring(0, 10));
+        map.put(HASH_KEY_TIME, Integer.toString(data.getTotalTime()));
+        map.put(HASH_KEY_DIST, String.format(getString(R.string.dist_text), data.getTotalDist()));
+        map.put(HASH_KEY_SPEED, String.format(getString(R.string.speed_text), data.getAvgSpeed()));
+        map.put(HASH_KEY_TIME_FORMATTED, String.format(getString(R.string.time_text), data.getTotalTime() / 60, data.getTotalTime() % 60));
+        map.put(HASH_KEY_DATE_FULL, data.getDate());
+        map.put(HASH_KEY_DIST_RAW, Double.toString(data.getTotalDist()));
+        map.put(HASH_KEY_SPEED_RAW, Double.toString(data.getAvgSpeed()));
 
         return map;
     }
 
     public void initAdapter(){
         simpleAdapter = new SimpleAdapter(context, recordsList, R.layout.list_item_stats,
-                new String[]{"date", "time", "dist", "speed"},
+                new String[]{HASH_KEY_DATE, HASH_KEY_TIME_FORMATTED, HASH_KEY_DIST, HASH_KEY_SPEED},
                 new int[]{R.id.textView_stats, R.id.list_subtext_time, R.id.list_subtext_dist,R.id.list_subtext_speed});
         listView.setAdapter(simpleAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map = recordsList.get(position);
-
                 Log.d(TAG, "Clicked " + position);
                 Intent intent = new Intent(context, StatResultsActivity.class);
-                intent.putExtra("RESULT_DATA_OBJECT", resultDataObject.get(position));
+                intent.putExtra(StatData.INTENT_KEY, resultDataObject.get(position));
                 startActivity(intent);
             }
         });
@@ -127,7 +139,8 @@ public class StatsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        readDb();
+        // clear db?
+        // readDB();
     }
 
     @Override
@@ -137,10 +150,10 @@ public class StatsFragment extends Fragment {
                 Collections.sort(recordsList, new Comparator<HashMap<String, String>>() {
                     @Override
                     public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
                         try {
-                            Date date1 = df.parse(o1.get("date"));
-                            Date date2 = df.parse(o2.get("date"));
+                            Date date1 = df.parse(o1.get(HASH_KEY_DATE_FULL));
+                            Date date2 = df.parse(o2.get(HASH_KEY_DATE_FULL));
 
                             if(date1.after(date2))
                                 return -1;
@@ -160,13 +173,7 @@ public class StatsFragment extends Fragment {
                 Collections.sort(recordsList, new Comparator<HashMap<String, String>>() {
                     @Override
                     public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
-                        int pos1 = Integer.parseInt(o1.get("position"));
-                        int pos2 = Integer.parseInt(o2.get("position"));
-
-                        StatData data1 = resultDataObject.get(pos1);
-                        StatData data2 = resultDataObject.get(pos2);
-
-                        if(data1.getDistance() > data2.getDistance())
+                        if(Double.valueOf(o1.get(HASH_KEY_DIST_RAW)) > Double.valueOf(o2.get(HASH_KEY_DIST_RAW)))
                             return -1;
                         else return 1;
                     }
@@ -178,13 +185,7 @@ public class StatsFragment extends Fragment {
                 Collections.sort(recordsList, new Comparator<HashMap<String, String>>() {
                     @Override
                     public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
-                        int pos1 = Integer.parseInt(o1.get("position"));
-                        int pos2 = Integer.parseInt(o2.get("position"));
-
-                        StatData data1 = resultDataObject.get(pos1);
-                        StatData data2 = resultDataObject.get(pos2);
-
-                        if(data1.getAvg_speed() > data2.getAvg_speed())
+                        if(Double.valueOf(o1.get(HASH_KEY_SPEED_RAW)) > Double.valueOf(o2.get(HASH_KEY_SPEED_RAW)))
                             return -1;
                         else return 1;
                     }
@@ -196,25 +197,9 @@ public class StatsFragment extends Fragment {
                 Collections.sort(recordsList, new Comparator<HashMap<String, String>>() {
                     @Override
                     public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
-                        SimpleDateFormat df = new SimpleDateFormat("HH:MM:SS");
-                        int pos1 = Integer.parseInt(o1.get("position"));
-                        int pos2 = Integer.parseInt(o2.get("position"));
-
-                        StatData data1 = resultDataObject.get(pos1);
-                        StatData data2 = resultDataObject.get(pos2);
-
-                        try {
-                            Long time1 = df.parse(data1.getTime_traveled()).getTime();
-                            Long time2 = df.parse(data2.getTime_traveled()).getTime();
-
-                            if(time1 > time2)
-                                return -1;
-                            else return 1;
-                        } catch (ParseException e) {
-                            Log.e("Time parse", e.getMessage());
-                        }
-
-                        return 0;
+                        if(Integer.valueOf(o1.get(HASH_KEY_TIME)) > Integer.valueOf(o2.get(HASH_KEY_TIME)))
+                            return -1;
+                        else return 1;
                     }
                 });
 

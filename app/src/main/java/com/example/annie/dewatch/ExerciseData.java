@@ -29,6 +29,8 @@ public class ExerciseData {
 
     public static final String HAS_STATS = "hasStats";
 
+    public static final String DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
+
     public static final String LAST_DATE = "lastDate";
     public static final String LAST_TIME = "lastTime";
     public static final String LAST_DISTANCE = "lastDistance";

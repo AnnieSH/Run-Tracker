@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class StatData implements Parcelable {
+    public static final String INTENT_KEY = "RESULT_DATA_OBJECT";
 
     private String date;
     private int time;

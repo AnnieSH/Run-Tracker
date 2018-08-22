@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public final class ExerciseDatabaseAdapter {
     private Context context;
@@ -98,7 +101,6 @@ public final class ExerciseDatabaseAdapter {
     public ExerciseData getExerciseEntry(int id) {
         Cursor cursor = db.query(ExerciseDataEntry.TABLE_NAME, null, ExerciseDataEntry._ID + " = ?", new String[] {Integer.toString(id)}, null, null, null);
 
-        Log.d("getExercise", "num " +  cursor.getCount());
         if(cursor.getCount() < 1) return null;
 
         cursor.moveToFirst();
@@ -110,5 +112,28 @@ public final class ExerciseDatabaseAdapter {
         cursor.close();
 
         return new ExerciseData(date, time, distance, speed, coordinates);
+    }
+
+    public List<ExerciseData> getAllExerciseEntries() {
+        ArrayList<ExerciseData> allEntries = new ArrayList<>();
+
+        Cursor cursor = db.query(ExerciseDataEntry.TABLE_NAME, null, null, null, null, null, null);
+
+        Log.d("getExercise", "num " +  cursor.getCount());
+        if(cursor.getCount() < 1) return null;
+
+        while(cursor.moveToNext()) {
+            String date = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DATE));
+            int time = cursor.getInt(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_TIME));
+            double distance = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DISTANCE));
+            double speed = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_SPEED));
+            String coordinates = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_COORDINATES));
+
+            allEntries.add(new ExerciseData(date, time, distance, speed, coordinates));
+        }
+
+        cursor.close();
+
+        return allEntries;
     }
 }

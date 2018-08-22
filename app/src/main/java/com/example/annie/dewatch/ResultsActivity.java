@@ -116,6 +116,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         dialog.show();
     }
 
+    // todo: use db for this
     private void saveLastExercise() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String currDateString = df.format(Calendar.getInstance().getTime());
@@ -194,7 +195,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     private void saveToDb() {
         Log.d("DB", "WRITE");
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
         String currDateString = df.format(Calendar.getInstance().getTime());
 
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);

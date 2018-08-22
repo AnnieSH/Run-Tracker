@@ -32,7 +32,7 @@ public class StatResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stat_results);
 
-        resultDataObject = getIntent().getParcelableExtra("RESULT_DATA_OBJECT");
+        resultDataObject = getIntent().getParcelableExtra(StatData.INTENT_KEY);
 
         Toolbar toolbar = findViewById(R.id.stat_results_toolbar);
         setSupportActionBar(toolbar);

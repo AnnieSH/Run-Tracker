@@ -73,7 +73,6 @@ public class ProgressFragment extends Fragment {
         speedSeries = new LineGraphSeries<>();
         speedGraph.addSeries(speedSeries);
 
-        attemptRecordRead();
         return rootView;
     }
 
@@ -95,58 +94,5 @@ public class ProgressFragment extends Fragment {
         graph.getViewport().setScrollable(true);
         graph.getViewport().setMinY(0);
         graph.getGridLabelRenderer().setHumanRounding(true);
-    }
-
-    private void attemptRecordRead() {
-        ExerciseRecordRequestReadObject requestData = new ExerciseRecordRequestReadObject(currentUser.getUid(), null);
-
-        deWatchClient client = deWatchServer.createService(deWatchClient.class);
-        Call<List<ExerciseRecordResponseObject>> call = client.readExerRecords(requestData);
-        call.enqueue(new Callback<List<ExerciseRecordResponseObject>>() {
-            @Override
-            public void onResponse(Call<List<ExerciseRecordResponseObject>> call, Response<List<ExerciseRecordResponseObject>> response) {
-                listSize = response.body().size();
-
-                if(listSize == 0)
-                    return;
-
-                for (int i = 0; i < listSize; i++) {
-                    float distance = response.body().get(i).getDistance();
-                    String time_traveled = response.body().get(i).getTime_traveled();
-                    float avg_speed = response.body().get(i).getAvg_speed();
-                    short avg_hr = response.body().get(i).getAvg_hr();
-                    short avg_o2 = response.body().get(i).getAvg_o2();
-
-                    int min = Integer.parseInt(time_traveled.substring(0,1)) * 60 + Integer.parseInt(time_traveled.substring(3,4));
-
-                    distSeries.appendData(new DataPoint(i + 1, distance), false, listSize);
-                    timeSeries.appendData(new DataPoint(i + 1, min), false, listSize);
-                    speedSeries.appendData(new DataPoint(i + 1, avg_speed), false, listSize);
-                }
-
-                int minX;
-                if(listSize < 10)
-                    minX = 0;
-                else
-                    minX = listSize - 10;
-
-                distGraph.getViewport().setMaxY(distSeries.getHighestValueY() + 0.5);
-                distGraph.getViewport().setMinX(minX);
-                distGraph.getViewport().setMaxX(listSize);
-
-                timeGraph.getViewport().setMaxY(timeSeries.getHighestValueY() + 1);
-                timeGraph.getViewport().setMinX(minX);
-                timeGraph.getViewport().setMaxX(listSize);
-
-                speedGraph.getViewport().setMaxY(speedSeries.getHighestValueY() + 0.1);
-                speedGraph.getViewport().setMinX(minX);
-                speedGraph.getViewport().setMaxX(listSize);
-            }
-
-            @Override
-            public void onFailure(Call<List<ExerciseRecordResponseObject>> call, Throwable t) {
-                Toast.makeText(context, "Server is down", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }
