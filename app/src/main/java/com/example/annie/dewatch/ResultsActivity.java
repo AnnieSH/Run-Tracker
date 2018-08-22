@@ -200,7 +200,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);
         dbAdapter.openWritable();
 
-        Log.d("DB", "Write result" + dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), ""));
+        Log.d("DB", "Write result: " + dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), ""));
         dbAdapter.close();
     }
 }

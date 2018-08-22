@@ -12,10 +12,11 @@ import java.util.List;
 /**
  * Created by Annie on 2018-03-08.
  * todo: Make this a cache
+ * todo: make this parcelable
  */
 
 public class ExerciseData {
-    private String date;
+    private String date; // todo: Insert date at the beginning of the exercise
     private double totalDist;
     private int totalTime; // in seconds
     private double avgSpeed;

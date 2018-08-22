@@ -40,7 +40,6 @@ public class StatResultsActivity extends AppCompatActivity {
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setTitle(resultDataObject.getDate().substring(0, 10));
 
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -49,7 +48,7 @@ public class StatResultsActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.stats_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.stats_tabs);
+        TabLayout tabLayout = findViewById(R.id.stats_tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));

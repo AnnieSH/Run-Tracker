@@ -43,6 +43,8 @@ public class StatsFragment extends Fragment {
     private List<HashMap<String, String>> recordsList;
     private List<StatData> resultDataObject;
 
+    private List<ExerciseData> exerciseLogs;
+
     private SimpleAdapter simpleAdapter;
 
     public StatsFragment() { }
@@ -67,12 +69,6 @@ public class StatsFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        readDb();
-    }
-
     private void readDb() {
         Log.d("DB", "READ");
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
@@ -85,6 +81,40 @@ public class StatsFragment extends Fragment {
             Log.d("DB", "is null");
 
         dbAdapter.close();
+
+        if(data != null) {
+            recordsList.add(createHash(data));
+            resultDataObject.add(new StatData(data.getDate(), data.getTotalTime(), data.getTotalDist(), data.getAvgSpeed(), ""));
+            initAdapter();
+        }
+    }
+
+    private HashMap<String, String> createHash(ExerciseData data) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("date", data.getDate().substring(0, 10));
+        map.put("time", Integer.toString(data.getTotalTime()));
+        map.put("dist", String.format(getString(R.string.dist_text),data.getTotalDist()));
+        map.put("speed", String.format(getString(R.string.speed_text), data.getAvgSpeed()));
+
+        return map;
+    }
+
+    public void initAdapter(){
+        simpleAdapter = new SimpleAdapter(context, recordsList, R.layout.list_item_stats,
+                new String[]{"date", "time", "dist", "speed"},
+                new int[]{R.id.textView_stats, R.id.list_subtext_time, R.id.list_subtext_dist,R.id.list_subtext_speed});
+        listView.setAdapter(simpleAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HashMap<String, String> map = recordsList.get(position);
+
+                Log.d(TAG, "Clicked " + position);
+                Intent intent = new Intent(context, StatResultsActivity.class);
+                intent.putExtra("RESULT_DATA_OBJECT", resultDataObject.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -92,6 +122,12 @@ public class StatsFragment extends Fragment {
         ((ProfileActivity) getActivity()).setActionBarTitle("Exercise Logs");
         inflater.inflate(R.menu.stat_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        readDb();
     }
 
     @Override
@@ -186,36 +222,5 @@ public class StatsFragment extends Fragment {
                 break;
         }
         return true;
-    }
-
-    private HashMap<String, String> createHash(StatData data, String pos) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("date", data.getDate().substring(0, 10));
-        map.put("position", pos);
-        map.put("time", data.getTime_traveled());
-        map.put("dist", String.format(getString(R.string.dist_text),data.getDistance()));
-        map.put("speed", String.format(getString(R.string.speed_text), data.getAvg_speed()));
-
-        return map;
-    }
-
-    public void initAdapter(){
-        simpleAdapter = new SimpleAdapter(context, recordsList, R.layout.list_item_stats,
-                new String[]{"date", "time", "dist", "speed"},
-                new int[]{R.id.textView_stats, R.id.list_subtext_time, R.id.list_subtext_dist,R.id.list_subtext_speed});
-        listView.setAdapter(simpleAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map = recordsList.get(position);
-                String posString = map.get("position");
-                int pos = Integer.parseInt(posString);
-
-                Log.d(TAG, "Clicked " + pos);
-                Intent intent = new Intent(context, StatResultsActivity.class);
-                intent.putExtra("RESULT_DATA_OBJECT", resultDataObject.get(pos));
-                startActivity(intent);
-            }
-        });
     }
 }

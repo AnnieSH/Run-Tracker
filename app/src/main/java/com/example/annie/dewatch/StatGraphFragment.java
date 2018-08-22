@@ -75,16 +75,16 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
         speedGraph.getViewport().setXAxisBoundsManual(true);
         speedGraph.getViewport().setMinX(0);
 
-        if(timesList.size() > 0) {
-            speedGraph.getViewport().setMaxX(timesList.get(timesList.size()-1));
-        }
-
-        Log.d(TAG, "timesList.size : " + timesList.size());
-        Log.d(TAG, "speedsList size: " + speedsList.size());
-
-        for(int i = 0; i < timesList.size(); i++){
-            updateSpeedGraph(timesList.get(i), speedsList.get(i));
-        }
+//        if(timesList.size() > 0) {
+//            speedGraph.getViewport().setMaxX(timesList.get(timesList.size()-1));
+//        }
+//
+//        Log.d(TAG, "timesList.size : " + timesList.size());
+//        Log.d(TAG, "speedsList size: " + speedsList.size());
+//
+//        for(int i = 0; i < timesList.size(); i++){
+//            updateSpeedGraph(timesList.get(i), speedsList.get(i));
+//        }
 
         return rootView;
     }

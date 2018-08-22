@@ -71,7 +71,7 @@ public final class ExerciseDatabaseAdapter {
         db.close();
     }
 
-    public SQLiteDatabase getDb() {
+    private SQLiteDatabase getDb() {
         return db;
     }
 
@@ -82,7 +82,7 @@ public final class ExerciseDatabaseAdapter {
      * @param distance
      * @param speed
      * @param coordinates
-     * @return Result from db insert
+     * @return Result from db insert, index in the db
      */
     public long insertExerciseEntry(String date, int time, double distance, double speed, String coordinates) throws SQLException {
         ContentValues newValues = new ContentValues();
@@ -105,7 +105,7 @@ public final class ExerciseDatabaseAdapter {
         String date = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DATE));
         int time = cursor.getInt(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_TIME));
         double distance = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DISTANCE));
-        double speed = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DISTANCE));
+        double speed = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_SPEED));
         String coordinates = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_COORDINATES));
         cursor.close();
 

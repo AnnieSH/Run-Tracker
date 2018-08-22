@@ -39,8 +39,6 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
     private TextView distTextView;
     private TextView timeTraveledTextView;
     private TextView avgSpeedTextView;
-    private TextView avgHRTextView;
-    private TextView avgO2TextView;
 
     private StatData resultDataObject;
 
@@ -81,8 +79,6 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
         distTextView = (TextView) rootView.findViewById(R.id.stat_dist);
         timeTraveledTextView = (TextView) rootView.findViewById(R.id.stat_time_traveled);
         avgSpeedTextView = (TextView) rootView.findViewById(R.id.stat_avg_speed);
-        avgHRTextView = (TextView) rootView.findViewById(R.id.stat_hr);
-        avgO2TextView = (TextView) rootView.findViewById(R.id.stat_o2);
 
         getExerRecord();
 
@@ -90,12 +86,14 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
     }
 
     public void getExerRecord(){
-        timeTextView.setText("Saved Time : " + resultDataObject.getTime());
-        distTextView.setText("Distance Traveled : " + String.valueOf(resultDataObject.getDistance()));
-        timeTraveledTextView.setText("Time Traveled : " + resultDataObject.getTime_traveled());
-        avgSpeedTextView.setText("Average Speed : " + String.valueOf(resultDataObject.getAvg_speed()) + " km/h");
-        avgHRTextView.setText("Average HR : " + String.valueOf(resultDataObject.getAvg_hr()) + " BPM");
-        avgO2TextView.setText("Average O2 : " + String.valueOf(resultDataObject.getAvg_o2()) + " %");
+        int time = resultDataObject.getTime();
+        int min = time / 60;
+        int sec = time % 60;
+
+        timeTextView.setText(String.format(getString(R.string.time_text), min, sec));
+        distTextView.setText(String.format(getString(R.string.dist_text), resultDataObject.getDistance()));
+        timeTraveledTextView.setText("Time Traveled : ");
+        avgSpeedTextView.setText("Average Speed : " + String.format(getString(R.string.speed_text), resultDataObject.getAvg_speed()));
     }
 
     public void getPathRecord(){
@@ -118,8 +116,6 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
         String path = resultDataObject.getGps_coord();
 
         String speedsJson = resultDataObject.getSpeeds();
-        String hrJson = resultDataObject.getHrs();
-        String o2Json = resultDataObject.getO2s();
         String timesJson = resultDataObject.getTimes_list();
 
         Type listType = new TypeToken<ArrayList<LatLng>>(){}.getType();
@@ -131,13 +127,7 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
         Type speedListType = new TypeToken<ArrayList<Double>>(){}.getType();
         List<Double> speedsList = new Gson().fromJson(speedsJson, speedListType);
 
-        Type hrListType = new TypeToken<ArrayList<Integer>>(){}.getType();
-        List<Integer> hrList = new Gson().fromJson(hrJson, hrListType);
-
-        Type o2ListType = new TypeToken<ArrayList<Integer>>(){}.getType();
-        List<Integer> o2List = new Gson().fromJson(o2Json, o2ListType);
-
-        pathOpt.addAll(pathList);
+//        pathOpt.addAll(pathList);
 
 //        for(int i = 0; i < pathList.size(); i++){
 //            //pathOpt.color(Color.rgb(255, 0, 0));
@@ -186,12 +176,12 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
         Log.d(TAG, "pathOpt1 SIZE : " + countOpt1);
         Log.d(TAG, "pathOpt SIZE : " + countOpt);
 
-        stat_map.addPolyline(pathOpt);
-        //stat_map.addPolyline(pathOpt1);
-        if(!pathList.isEmpty()) {
-            LatLng pathCentre = ResultsActivity.getPathCentre(pathList);
-            stat_map.moveCamera(CameraUpdateFactory.newLatLngZoom(pathCentre, 15.0f));
-        }
+//        stat_map.addPolyline(pathOpt);
+//        //stat_map.addPolyline(pathOpt1);
+//        if(!pathList.isEmpty()) {
+//            LatLng pathCentre = ResultsActivity.getPathCentre(pathList);
+//            stat_map.moveCamera(CameraUpdateFactory.newLatLngZoom(pathCentre, 15.0f));
+//        }
 
     }
 
