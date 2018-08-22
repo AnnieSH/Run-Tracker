@@ -103,7 +103,7 @@ public final class ExerciseDatabaseAdapter {
     public ExerciseData getExerciseEntry(int id) {
         ExerciseData exercise = new ExerciseData();
 
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, null, ExerciseDataEntry._ID + " = ?", new String[] {Integer.toString(id)}, null, null, null);
 
         Log.d("getExercise", "num " +  cursor.getCount());
         if(cursor.getCount() < 1) return null;
