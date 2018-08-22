@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import static com.example.annie.dewatch.ExerciseDatabaseAdapter.DATABASE_NAME;
 import static com.example.annie.dewatch.ExerciseDatabaseAdapter.DATABASE_VERSION;
-import static com.example.annie.dewatch.ExerciseDatabaseAdapter.SQL_CREATE_ENTRIES;
-import static com.example.annie.dewatch.ExerciseDatabaseAdapter.SQL_DELETE_TABLE;
+import static com.example.annie.dewatch.ExerciseDatabaseAdapter.SQL_CREATE_EXERCISE_TABLE;
+import static com.example.annie.dewatch.ExerciseDatabaseAdapter.SQL_DELETE_EXERCISE_TABLE;
 
 public class ExerciseDataDbHelper extends SQLiteOpenHelper {
 
@@ -17,12 +17,12 @@ public class ExerciseDataDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(SQL_CREATE_EXERCISE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_TABLE);
+        db.execSQL(SQL_DELETE_EXERCISE_TABLE);
         onCreate(db);
     }
 

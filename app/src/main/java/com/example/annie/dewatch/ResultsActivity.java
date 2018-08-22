@@ -1,10 +1,8 @@
 package com.example.annie.dewatch;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -202,7 +200,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);
         dbAdapter.openWritable();
 
-        Log.d("DB", "Write result" + dbAdapter.insertEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), ""));
+        Log.d("DB", "Write result" + dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), ""));
         dbAdapter.close();
     }
 }

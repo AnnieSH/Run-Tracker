@@ -15,6 +15,7 @@ import java.util.List;
  */
 
 public class ExerciseData {
+    private String date;
     private double totalDist;
     private int totalTime; // in seconds
     private double avgSpeed;
@@ -61,6 +62,14 @@ public class ExerciseData {
         speedsList = new ArrayList<>();
         timeList = new ArrayList<>();
         pathPoints = new ArrayList<>();
+    }
+
+    ExerciseData(String date, int time, double distance, double speed, String coordinates) {
+        this.date = date;
+        this.totalTime = time;
+        this.totalDist = distance;
+        this.avgSpeed = speed;
+        // todo: coordinates
     }
 
     private double updateAverage(double stat, double average, ArrayList<Double> statList) {
@@ -140,5 +149,9 @@ public class ExerciseData {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return c * EARTH_RADIUS;
+    }
+
+    public String getDate() {
+        return date;
     }
 }
