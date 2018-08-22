@@ -32,12 +32,8 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
 
     private String TAG = Config.APP_TAG + ": STATS_PATH_FRAG";
 
-    // User
-    private User currentUser;
-
     private TextView timeTextView;
     private TextView distTextView;
-    private TextView timeTraveledTextView;
     private TextView avgSpeedTextView;
 
     private StatData resultDataObject;
@@ -47,9 +43,6 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
     private PolylineOptions pathOpt2;
 
     private GoogleMap stat_map;
-
-    StatPathFragment statPathFrag;
-
 
     public StatPathFragment() {
     }
@@ -67,18 +60,15 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stats_results, container, false);
 
-        currentUser = User.getCurrentUser();
-
         resultDataObject = getArguments().getParcelable("RESULT_DATA_OBJ");
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.stat_map);
         mapFragment.getMapAsync(this);
 
-        timeTextView = (TextView) rootView.findViewById(R.id.stat_time);
-        distTextView = (TextView) rootView.findViewById(R.id.stat_dist);
-        timeTraveledTextView = (TextView) rootView.findViewById(R.id.stat_time_traveled);
-        avgSpeedTextView = (TextView) rootView.findViewById(R.id.stat_avg_speed);
+        timeTextView = rootView.findViewById(R.id.stat_time);
+        distTextView = rootView.findViewById(R.id.stat_dist);
+        avgSpeedTextView = rootView.findViewById(R.id.stat_avg_speed);
 
         getExerRecord();
 
@@ -92,8 +82,7 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
 
         timeTextView.setText(String.format(getString(R.string.time_text), min, sec));
         distTextView.setText(String.format(getString(R.string.dist_text), resultDataObject.getDistance()));
-        timeTraveledTextView.setText("Time Traveled : ");
-        avgSpeedTextView.setText("Average Speed : " + String.format(getString(R.string.speed_text), resultDataObject.getAvg_speed()));
+        avgSpeedTextView.setText(String.format(getString(R.string.speed_text), resultDataObject.getAvg_speed()));
     }
 
     public void getPathRecord(){
@@ -185,11 +174,9 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
 
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         stat_map = googleMap;
         getPathRecord();
     }
-
 }
