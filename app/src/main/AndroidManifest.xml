@@ -37,9 +37,6 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ResultsActivity" />
-        <activity
-            android:name=".StatActivity"
-            android:parentActivityName=".ProfileActivity" />
         <activity android:name=".StatResultsActivity" />
         <activity android:name=".ExerciseActivity" />
         <activity android:name=".ProfileSettingsActivity" />
