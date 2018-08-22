@@ -2,6 +2,8 @@ package com.example.annie.dewatch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -15,12 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
-import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordRequestReadObject;
-import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordResponseObject;
-import com.example.annie.dewatch.deWatchClient.deWatchClient;
-import com.example.annie.dewatch.deWatchClient.deWatchServer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,12 +26,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.annotation.Nullable;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class StatsFragment extends Fragment {
@@ -75,6 +65,36 @@ public class StatsFragment extends Fragment {
         resultDataObject = new ArrayList<>();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        readDb();
+    }
+
+    private void readDb() {
+        Log.d("DB", "READ");
+        ExerciseDataDbHelper mDbHelper = new ExerciseDataDbHelper(context);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String selection = ExerciseDatabaseAdapter.ExerciseDataEntry.COLUMN_NAME_DATE + " = ?";
+        String sortOrder = ExerciseDatabaseAdapter.ExerciseDataEntry.COLUMN_NAME_DATE + " DESC";
+
+        Cursor cursor = db.query(
+                ExerciseDatabaseAdapter.ExerciseDataEntry.TABLE_NAME,
+                null,
+                selection,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+
+        while(cursor.moveToNext()) {
+            Log.d("DB", "Read ENTRY");
+            Log.d("DB", cursor.getString(cursor.getColumnIndexOrThrow(ExerciseDatabaseAdapter.ExerciseDataEntry.COLUMN_NAME_DATE)));
+        }
     }
 
     @Override

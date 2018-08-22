@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Annie on 2018-03-08.
+ * todo: Make this a cache
  */
 
 public class ExerciseData {

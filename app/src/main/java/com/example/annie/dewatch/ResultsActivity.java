@@ -1,7 +1,10 @@
 package com.example.annie.dewatch;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -12,34 +15,26 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordRequestWriteObject;
-import com.example.annie.dewatch.deWatchClient.deWatchClient;
-import com.example.annie.dewatch.deWatchClient.deWatchServer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.example.annie.dewatch.ExercisePathFragment.exerciseData;
 
 public class ResultsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String TAG = Config.APP_TAG + ": RESULTS";
+
+    Context context;
 
     // User
     private User currentUser;
@@ -50,6 +45,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+        context = getApplicationContext();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.results_map);
@@ -66,6 +62,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onClick(View view) {
                 saveLastExercise();
+                saveToDb();
                 ResultsActivity.this.finish();
             }
         });
@@ -196,4 +193,15 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         return centre;
     }
 
+    private void saveToDb() {
+        Log.d("DB", "WRITE");
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        String currDateString = df.format(Calendar.getInstance().getTime());
+
+        ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);
+        dbAdapter.openWritable();
+
+        dbAdapter.insertEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), "");
+    }
 }
