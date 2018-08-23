@@ -37,13 +37,12 @@
         android:id="@+id/best_exercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="Personal Bests"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/last_exercise"
         app:layout_constraintTop_toBottomOf="@+id/last_exercise_stats" />
 
     <TextView

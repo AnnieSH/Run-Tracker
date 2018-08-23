@@ -3,6 +3,7 @@ package com.example.annie.dewatch;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.icu.text.AlphabeticIndex;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -60,7 +61,6 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onClick(View view) {
                 saveLastExercise();
-                saveToDb();
                 ResultsActivity.this.finish();
             }
         });
@@ -76,7 +76,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         timeText.setText(String.format(getString(R.string.time_text), min, sec));
 
         float avgSpeed = 0;
-        if(exerciseData.getTotalTime() != 0)
+        if (exerciseData.getTotalTime() != 0)
             avgSpeed = (float) (exerciseData.getTotalDist() / exerciseData.getTotalTime()) * 3600;
         speedText.setText(String.format(getString(R.string.speed_text), avgSpeed));
 
@@ -89,7 +89,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         Polyline path = map.addPolyline(exerciseData.pathOptions);
         path.setPoints(exerciseData.getPathPoints());
 
-        if(!exerciseData.getPathPoints().isEmpty())
+        if (!exerciseData.getPathPoints().isEmpty())
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(getPathCentre(exerciseData.getPathPoints()), 14.2f));
     }
 
@@ -118,6 +118,8 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
     // todo: use db for this
     private void saveLastExercise() {
+        saveLogToDb();
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String currDateString = df.format(Calendar.getInstance().getTime());
         long currDate = 0;
@@ -136,7 +138,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
         int min = exerciseData.getTotalTime() / 60;
         double speed = 0;
-        if(exerciseData.getTotalTime() > 0)
+        if (exerciseData.getTotalTime() > 0)
             speed = exerciseData.getTotalDist() / exerciseData.getTotalTime() * 3600;
 
         editor.putLong(ExerciseData.LAST_DATE, currDate);
@@ -144,20 +146,20 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         editor.putFloat(ExerciseData.LAST_DISTANCE, (float) exerciseData.getTotalDist());
         editor.putFloat(ExerciseData.LAST_SPEED, (float) speed);
 
-        if(exerciseData.getTotalDist() > prefs.getFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, -1)) {
+        if (exerciseData.getTotalDist() > prefs.getFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, -1)) {
             editor.putString(ExerciseData.DISTANCE_RECORD_DATE, dateString);
             editor.putInt(ExerciseData.DISTANCE_RECORD_TIME, min);
             editor.putFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, (float) exerciseData.getTotalDist());
             editor.putFloat(ExerciseData.DISTANCE_RECORD_SPEED, (float) speed);
         }
-        if(speed > prefs.getFloat(ExerciseData.SPEED_RECORD_SPEED, -1)) {
+        if (speed > prefs.getFloat(ExerciseData.SPEED_RECORD_SPEED, -1)) {
             editor.putString(ExerciseData.SPEED_RECORD_DATE, dateString);
             editor.putInt(ExerciseData.SPEED_RECORD_TIME, min);
             editor.putFloat(ExerciseData.SPEED_RECORD_DISTANCE, (float) exerciseData.getTotalDist());
             editor.putFloat(ExerciseData.SPEED_RECORD_SPEED, (float) speed);
         }
 
-        if(exerciseData.getTotalTime() > prefs.getInt(ExerciseData.TIME_RECORD_TIME_SEC, -1)) {
+        if (exerciseData.getTotalTime() > prefs.getInt(ExerciseData.TIME_RECORD_TIME_SEC, -1)) {
             editor.putString(ExerciseData.TIME_RECORD_DATE, dateString);
             editor.putInt(ExerciseData.TIME_RECORD_TIME_SEC, exerciseData.getTotalTime());
             editor.putInt(ExerciseData.TIME_RECORD_TIME, min);
@@ -175,33 +177,63 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         double maxLat = points.get(0).latitude;
         double maxLng = points.get(0).longitude;
 
-        for(LatLng point : points) {
-            if(point.latitude < minLat)
+        for (LatLng point : points) {
+            if (point.latitude < minLat)
                 minLat = point.latitude;
-            if(point.latitude > maxLat)
+            if (point.latitude > maxLat)
                 maxLat = point.latitude;
 
-            if(point.longitude < minLng)
+            if (point.longitude < minLng)
                 minLng = point.longitude;
-            if(point.longitude > maxLng)
+            if (point.longitude > maxLng)
                 maxLng = point.longitude;
         }
 
-        centre = new LatLng((minLat + maxLat)/2, (minLng + maxLng)/2);
+        centre = new LatLng((minLat + maxLat) / 2, (minLng + maxLng) / 2);
 
         return centre;
     }
 
-    private void saveToDb() {
+    private void saveLogToDb() {
         Log.d("DB", "WRITE");
 
         SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
         String currDateString = df.format(Calendar.getInstance().getTime());
+        exerciseData.setDate(currDateString);
 
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);
         dbAdapter.openWritable();
 
         Log.d("DB", "Write result: " + dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), ""));
+
+        List<ExerciseData> records = dbAdapter.getAllRecordEntries();
+
+        if(records.isEmpty()) {
+            Log.d("Records DB", "Is empty, WRITING NEW ENTRIES");
+            Log.d("Records WRITES", "RESULT : " + dbAdapter.insertRecord(ExerciseDatabaseAdapter.RecordEntry.RECORD_DISTANCE, exerciseData));
+            dbAdapter.insertRecord(ExerciseDatabaseAdapter.RecordEntry.RECORD_TIME, exerciseData);
+            dbAdapter.insertRecord(ExerciseDatabaseAdapter.RecordEntry.RECORD_SPEED, exerciseData);
+        } else {
+            for (ExerciseData record : records) {
+                switch (record.getRecordType()) {
+                    case ExerciseDatabaseAdapter.RecordEntry.RECORD_DISTANCE:
+                        if (exerciseData.getTotalDist() > record.getTotalDist())
+                            dbAdapter.updateRecord(ExerciseDatabaseAdapter.RecordEntry.RECORD_DISTANCE, exerciseData);
+                        break;
+                    case ExerciseDatabaseAdapter.RecordEntry.RECORD_TIME:
+                        if (exerciseData.getTotalTime() > record.getTotalTime())
+                            dbAdapter.updateRecord(ExerciseDatabaseAdapter.RecordEntry.RECORD_TIME, exerciseData);
+                        break;
+                    case ExerciseDatabaseAdapter.RecordEntry.RECORD_SPEED:
+                        if (exerciseData.getAvgSpeed() > record.getAvgSpeed())
+                            dbAdapter.updateRecord(ExerciseDatabaseAdapter.RecordEntry.RECORD_SPEED, exerciseData);
+                        break;
+                    default:
+                        Log.e("DB", "Unknown record type " + record.getRecordType());
+                }
+            }
+        }
+
         dbAdapter.close();
     }
 }

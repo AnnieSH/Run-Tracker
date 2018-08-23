@@ -26,6 +26,7 @@ public class ExerciseData {
     private ArrayList<Double> speedsList;
     private ArrayList<Double> distList;
     private ArrayList<Integer> timeList;
+    private String recordType; // for use in best record db
 
     public static final String HAS_STATS = "hasStats";
 
@@ -73,6 +74,14 @@ public class ExerciseData {
         this.totalDist = distance;
         this.avgSpeed = speed;
         // todo: coordinates
+    }
+
+    ExerciseData(String recordType, String date, int time, double distance, double speed) {
+        this.date = date;
+        this.totalTime = time;
+        this.totalDist = distance;
+        this.avgSpeed = speed;
+        this.recordType = recordType;
     }
 
     private double updateAverage(double stat, double average, ArrayList<Double> statList) {
@@ -156,5 +165,17 @@ public class ExerciseData {
 
     public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
     }
 }

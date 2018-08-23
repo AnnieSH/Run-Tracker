@@ -2,9 +2,8 @@ package com.example.annie.dewatch;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,8 +41,6 @@ public class StatsFragment extends Fragment {
     private List<HashMap<String, String>> recordsList;
     private List<StatData> resultDataObject;
 
-    private SimpleAdapter simpleAdapter;
-
     private final String HASH_KEY_DIST = "dist";
     private final String HASH_KEY_SPEED = "speed";
     private final String HASH_KEY_DATE = "date";
@@ -56,12 +53,11 @@ public class StatsFragment extends Fragment {
     public StatsFragment() { }
 
     public static StatsFragment newInstance() {
-        StatsFragment fragment = new StatsFragment();
-        return fragment;
+        return new StatsFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_stats, container, false);
         context = getContext();
@@ -77,8 +73,7 @@ public class StatsFragment extends Fragment {
         return rootView;
     }
 
-    // todo: DB wont be read when an exercise is finished - fix this
-    private void readDb() {
+    private synchronized void readDb() {
         Log.d("DB", "READ");
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
 
@@ -114,7 +109,7 @@ public class StatsFragment extends Fragment {
     }
 
     public void initAdapter(){
-        simpleAdapter = new SimpleAdapter(context, recordsList, R.layout.list_item_stats,
+        SimpleAdapter simpleAdapter = new SimpleAdapter(context, recordsList, R.layout.list_item_stats,
                 new String[]{HASH_KEY_DATE, HASH_KEY_TIME_FORMATTED, HASH_KEY_DIST, HASH_KEY_SPEED},
                 new int[]{R.id.textView_stats, R.id.list_subtext_time, R.id.list_subtext_dist,R.id.list_subtext_speed});
         listView.setAdapter(simpleAdapter);
@@ -139,8 +134,9 @@ public class StatsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // clear db?
-        // readDB();
+        recordsList.clear();
+        resultDataObject.clear();
+        readDb();
     }
 
     @Override

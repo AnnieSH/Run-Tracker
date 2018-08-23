@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -35,8 +34,18 @@ public final class ExerciseDatabaseAdapter {
                     ExerciseDataEntry.COLUMN_NAME_SPEED + " REAL," +
                     ExerciseDataEntry.COLUMN_NAME_COORDINATES + " TEXT)";
 
+    public static final String SQL_CREATE_RECORDS_TABLE =
+            "CREATE TABLE IF NOT EXISTS " + RecordEntry.TABLE_NAME + " (" +
+                    RecordEntry.COLUMN_NAME_RECORD + " TEXT," +
+                    RecordEntry.COLUMN_NAME_DATE + " TEXT," +
+                    RecordEntry.COLUMN_NAME_TIME + " INTEGER," +
+                    RecordEntry.COLUMN_NAME_DISTANCE + " REAL," +
+                    RecordEntry.COLUMN_NAME_SPEED + " REAL)";
+
     public static final String SQL_DELETE_EXERCISE_TABLE =
             "DROP TABLE IF EXISTS " + ExerciseDataEntry.TABLE_NAME;
+    public static final String SQL_DELETE_RECORDS_TABLE =
+            "DROP TABLE IF EXISTS " + RecordEntry.TABLE_NAME;
 
     public static class ExerciseDataEntry implements BaseColumns {
         public static final String TABLE_NAME = "exercise";
@@ -54,7 +63,7 @@ public final class ExerciseDatabaseAdapter {
         public static final String COLUMN_NAME_TIME = "time";
         public static final String COLUMN_NAME_DISTANCE = "distance";
         public static final String COLUMN_NAME_SPEED = "speed";
-        public static final String COLUMN_NAME_COORDINATES = "coordinates";
+
         public static final String RECORD_SPEED = "speed";
         public static final String RECORD_TIME = "time";
         public static final String RECORD_DISTANCE = "distance";
@@ -116,7 +125,6 @@ public final class ExerciseDatabaseAdapter {
 
     public List<ExerciseData> getAllExerciseEntries() {
         ArrayList<ExerciseData> allEntries = new ArrayList<>();
-
         Cursor cursor = db.query(ExerciseDataEntry.TABLE_NAME, null, null, null, null, null, null);
 
         Log.d("getExercise", "num " +  cursor.getCount());
@@ -133,7 +141,61 @@ public final class ExerciseDatabaseAdapter {
         }
 
         cursor.close();
-
         return allEntries;
+    }
+
+    public List<ExerciseData> getAllRecordEntries() {
+        ArrayList<ExerciseData> allEntries = new ArrayList<>();
+
+        Cursor cursor = db.query(RecordEntry.TABLE_NAME, null, null, null, null, null, null);
+        Log.d("Record DB", "Number of entries: " + cursor.getCount());
+
+        while(cursor.moveToNext()) {
+            String date = cursor.getString(cursor.getColumnIndex(RecordEntry.COLUMN_NAME_DATE));
+            int time = cursor.getInt(cursor.getColumnIndex(RecordEntry.COLUMN_NAME_TIME));
+            double distance = cursor.getDouble(cursor.getColumnIndex(RecordEntry.COLUMN_NAME_DISTANCE));
+            double speed = cursor.getDouble(cursor.getColumnIndex(RecordEntry.COLUMN_NAME_SPEED));
+            String recordType = cursor.getString(cursor.getColumnIndex(RecordEntry.COLUMN_NAME_RECORD));
+
+            allEntries.add(new ExerciseData(recordType, date, time, distance, speed));
+        }
+
+        cursor.close();
+        return allEntries;
+    }
+
+    /**
+     *
+     * @param recordName Type of record: distance, speed, time. Use RecordEntry
+     * @return number of rows affected. Should always be 1 unless record didn't exist yet
+     */
+    public int updateRecord(String recordName, ExerciseData data) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(RecordEntry.COLUMN_NAME_RECORD, recordName);
+        newValues.put(RecordEntry.COLUMN_NAME_DATE, data.getDate());
+        newValues.put(RecordEntry.COLUMN_NAME_TIME, data.getTotalTime());
+        newValues.put(RecordEntry.COLUMN_NAME_DISTANCE, data.getTotalDist());
+        newValues.put(RecordEntry.COLUMN_NAME_SPEED, data.getAvgSpeed());
+
+        Cursor cursor = db.query(RecordEntry.TABLE_NAME, null, RecordEntry.COLUMN_NAME_RECORD + " = ?", new String[] {recordName}, null, null, null);
+        cursor.close();
+
+        return db.update(
+                RecordEntry.TABLE_NAME,
+                newValues,
+                RecordEntry.COLUMN_NAME_RECORD + " LIKE ?",
+                new String[]{recordName}
+        );
+    }
+
+    public long insertRecord(String recordName, ExerciseData data) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(RecordEntry.COLUMN_NAME_RECORD, recordName);
+        newValues.put(RecordEntry.COLUMN_NAME_DATE, data.getDate());
+        newValues.put(RecordEntry.COLUMN_NAME_TIME, data.getTotalTime());
+        newValues.put(RecordEntry.COLUMN_NAME_DISTANCE, data.getTotalDist());
+        newValues.put(RecordEntry.COLUMN_NAME_SPEED, data.getAvgSpeed());
+
+        return db.insertOrThrow(RecordEntry.TABLE_NAME, null, newValues);
     }
 }

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ProfileFragment extends Fragment {
@@ -106,7 +107,7 @@ public class ProfileFragment extends Fragment {
     /**
      * Displays last exercise time and best records
      */
-    public void displayRecords() {
+    public synchronized void displayRecords() {
         TextView lastExercise = rootView.findViewById(R.id.last_exercise);
         TextView lastExerciseStats = rootView.findViewById(R.id.last_exercise_stats);
         TextView bestSpeedText = rootView.findViewById(R.id.best_speed_stats);
@@ -115,13 +116,12 @@ public class ProfileFragment extends Fragment {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // todo: Once server or local data exists, check for that
+        // todo: Put this into records db
         if (!prefs.getBoolean("hasStats", false)) {
             lastExercise.setText("You haven't exercised yet!");
-            bestDistText.setText("No personal bests yet!");
         } else {
             // TODO: Okay so this is super janky but basically I get the current date then convert
-            // to get base date at midnight then convert back and there's probably a better way to do this
+            // todo  to get base date at midnight then convert back and there's probably a better way to do this
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Long date = TimeUnit.MILLISECONDS.toDays(prefs.getLong("lastDate", 0));
             String currDateString = df.format(Calendar.getInstance().getTime());
@@ -145,32 +145,41 @@ public class ProfileFragment extends Fragment {
                     prefs.getInt(ExerciseData.LAST_TIME, 0),
                     prefs.getFloat(ExerciseData.LAST_DISTANCE, 0),
                     prefs.getFloat(ExerciseData.LAST_SPEED, 0)));
-
-            bestSpeedText.setText(String.format(getString(R.string.exercise_stat),
-                    prefs.getString(ExerciseData.SPEED_RECORD_DATE, ""),
-                    prefs.getInt(ExerciseData.SPEED_RECORD_TIME, 0),
-                    prefs.getFloat(ExerciseData.SPEED_RECORD_DISTANCE, 0),
-                    prefs.getFloat(ExerciseData.SPEED_RECORD_SPEED, 0)));
-
-            bestDistText.setText(String.format(getString(R.string.exercise_stat),
-                    prefs.getString(ExerciseData.DISTANCE_RECORD_DATE, ""),
-                    prefs.getInt(ExerciseData.DISTANCE_RECORD_TIME, 0),
-                    prefs.getFloat(ExerciseData.DISTANCE_RECORD_DISTANCE, 0),
-                    prefs.getFloat(ExerciseData.DISTANCE_RECORD_SPEED, 0)));
-
-            bestTimeText.setText(String.format(getString(R.string.exercise_stat),
-                    prefs.getString(ExerciseData.TIME_RECORD_DATE, ""),
-                    prefs.getInt(ExerciseData.TIME_RECORD_TIME, 0),
-                    prefs.getFloat(ExerciseData.TIME_RECORD_DISTANCE, 0),
-                    prefs.getFloat(ExerciseData.TIME_RECORD_SPEED, 0)));
         }
 
+        ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
+        dbAdapter.openReadable();
+        List<ExerciseData> records = dbAdapter.getAllRecordEntries();
+        dbAdapter.close();
+
+        if(records.isEmpty()) {
+            bestDistText.setText("No personal bests yet!");
+        } else {
+            for(ExerciseData record : records) {
+                String recordValues = String.format(getString(R.string.exercise_stat),
+                        record.getDate().substring(0, 10),
+                        record.getTotalTime() / 60,
+                        record.getTotalTime() % 60,
+                        record.getTotalDist(),
+                        record.getAvgSpeed());
+
+                switch(record.getRecordType()) {
+                    case ExerciseDatabaseAdapter.RecordEntry.RECORD_DISTANCE:
+                        bestDistText.setText(recordValues);
+                        break;
+                    case ExerciseDatabaseAdapter.RecordEntry.COLUMN_NAME_TIME:
+                        bestTimeText.setText(recordValues);
+                        break;
+                    case ExerciseDatabaseAdapter.RecordEntry.COLUMN_NAME_SPEED:
+                        bestSpeedText.setText(recordValues);
+                        break;
+                }
+            }
+        }
     }
 
     /**
      * Called when there is no location permission
-     *
-     * TODO: Handle when the user presses "Don't ask again"
      */
     private void getLocationPermission() {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
