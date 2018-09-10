@@ -3,7 +3,6 @@ package com.example.annie.dewatch;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.icu.text.AlphabeticIndex;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -19,10 +18,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,15 +29,7 @@ import java.util.List;
 import static com.example.annie.dewatch.ExercisePathFragment.exerciseData;
 
 public class ResultsActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    private String TAG = Config.APP_TAG + ": RESULTS";
-
-    Context context;
-
-    // User
-    private User currentUser;
-
-    private GoogleMap map;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +44,6 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         setSupportActionBar((Toolbar) findViewById(R.id.results_toolbar));
         ActionBar bar = getSupportActionBar();
         bar.setTitle("Results");
-
-        currentUser = User.getCurrentUser();
 
         FloatingActionButton fab = findViewById(R.id.results_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +73,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+        GoogleMap map = googleMap;
 
         Polyline path = map.addPolyline(exerciseData.pathOptions);
         path.setPoints(exerciseData.getPathPoints());
@@ -121,7 +108,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     private void saveLastExercise() {
         saveLogToDb();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
         String currDateString = df.format(Calendar.getInstance().getTime());
         long currDate = 0;
         try {

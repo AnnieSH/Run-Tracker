@@ -17,7 +17,6 @@ import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Calendar;
 import java.util.Random;
 
 import static com.example.annie.dewatch.ExercisePathFragment.exerciseData;

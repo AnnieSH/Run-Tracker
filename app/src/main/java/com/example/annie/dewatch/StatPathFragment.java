@@ -2,7 +2,7 @@ package com.example.annie.dewatch;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,8 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.annie.dewatch.ExercisePathFragment.exerciseData;
 
 /**
  * Created by krisley3094 on 17/03/18.
@@ -39,8 +36,6 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
     private StatData resultDataObject;
 
     private PolylineOptions pathOpt;
-    private PolylineOptions pathOpt1;
-    private PolylineOptions pathOpt2;
 
     private GoogleMap stat_map;
 
@@ -50,17 +45,17 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
     public static StatPathFragment newInstance(StatData argObject) {
         StatPathFragment fragment = new StatPathFragment();
         Bundle args = new Bundle();
-        args.putParcelable("RESULT_DATA_OBJ", argObject);
+        args.putParcelable(StatData.INTENT_KEY, argObject);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stats_results, container, false);
 
-        resultDataObject = getArguments().getParcelable("RESULT_DATA_OBJ");
+        resultDataObject = getArguments().getParcelable(StatData.INTENT_KEY);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.stat_map);
@@ -91,7 +86,7 @@ public class StatPathFragment extends android.support.v4.app.Fragment implements
                 color(Color.rgb(0, 155, 224)).
                 width(10);
 
-        String path = resultDataObject.getGps_coord();
+        String path = resultDataObject.getGpsCoordinates();
         Type listType = new TypeToken<ArrayList<LatLng>>(){}.getType();
         List<LatLng> pathList = new Gson().fromJson(path, listType);
 

@@ -10,24 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.annie.dewatch.deWatchClient.Classes.ProfileEditAgeRequest;
-import com.example.annie.dewatch.deWatchClient.Classes.ProfileEditEmailRequest;
-import com.example.annie.dewatch.deWatchClient.Classes.ProfileEditFirstNameRequest;
-import com.example.annie.dewatch.deWatchClient.Classes.ProfileEditLastNameRequest;
-import com.example.annie.dewatch.deWatchClient.Classes.ProfileEditWeightRequest;
-import com.example.annie.dewatch.deWatchClient.deWatchClient;
-import com.example.annie.dewatch.deWatchClient.deWatchServer;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProfileSettingsActivity extends AppCompatActivity {
 

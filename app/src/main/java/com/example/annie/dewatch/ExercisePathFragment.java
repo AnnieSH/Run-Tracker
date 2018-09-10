@@ -94,14 +94,13 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(vancouver, 16.2f));
             }
 
-            // todo handle null location provider
             String locProvider = getLocationProvider();
             if(locProvider == null) {
-
+                // todo handle null location provider
             }
 
             locationListener = getLocationListener();
-            locationManager.requestLocationUpdates(getLocationProvider(), 2500, 0, locationListener);
+            locationManager.requestLocationUpdates(getLocationProvider(), 500, 0, locationListener);
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");

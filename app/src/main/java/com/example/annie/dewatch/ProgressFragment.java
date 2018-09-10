@@ -1,7 +1,6 @@
 package com.example.annie.dewatch;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,22 +8,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordRequestReadObject;
-import com.example.annie.dewatch.deWatchClient.Classes.ExerciseRecordResponseObject;
-import com.example.annie.dewatch.deWatchClient.deWatchClient;
-import com.example.annie.dewatch.deWatchClient.deWatchServer;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProgressFragment extends Fragment {
     Context context;

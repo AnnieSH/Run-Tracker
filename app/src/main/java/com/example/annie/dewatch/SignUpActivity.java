@@ -41,17 +41,17 @@ public class SignUpActivity extends AppCompatActivity {
         // initialize Auth
         currentUser = User.getCurrentUser();
 
-        lastnameEditText = (EditText) findViewById(R.id.signup_editText_lastname);
-        firstnameEditText = (EditText) findViewById(R.id.signup_editText_firstname);
-        emailEditText = (EditText) findViewById(R.id.signup_editText_email);
-        passwordEditText = (EditText) findViewById(R.id.signup_editText_password);
-        cpasswordEditText = (EditText) findViewById(R.id.signup_editText_cpassword);
-        ageEditText = (EditText) findViewById(R.id.signup_editText_age);
-        weightEditText = (EditText) findViewById(R.id.signup_editText_weight);
+        lastnameEditText = findViewById(R.id.signup_editText_lastname);
+        firstnameEditText = findViewById(R.id.signup_editText_firstname);
+        emailEditText = findViewById(R.id.signup_editText_email);
+        passwordEditText = findViewById(R.id.signup_editText_password);
+        cpasswordEditText = findViewById(R.id.signup_editText_cpassword);
+        ageEditText = findViewById(R.id.signup_editText_age);
+        weightEditText = findViewById(R.id.signup_editText_weight);
 
-        submitButton = (Button) findViewById(R.id.signup_btn_signUp);
+        submitButton = findViewById(R.id.signup_btn_signUp);
 
-        genderSpinner = (Spinner) findViewById(R.id.signup_spinner_gender);
+        genderSpinner = findViewById(R.id.signup_spinner_gender);
 
         String[] gender = {"Male", "Female"};
 

@@ -13,18 +13,18 @@ public class StatData implements Parcelable {
     private String date;
     private int time;
     private double distance;
-    private String time_traveled;
+    private String timeTravelled;
     private double avg_speed;
-    private String gps_coord;
+    private String gpsCoordinates;
     private String speeds;
     private String times_list;
 
-    public StatData(String date, int time, double distance, double avg_speed, String gps_coord) {
+    public StatData(String date, int time, double distance, double avg_speed, String gpsCoordinates) {
         this.date = date;
         this.time = time;
         this.distance = distance;
         this.avg_speed = avg_speed;
-        this.gps_coord = gps_coord;
+        this.gpsCoordinates = gpsCoordinates;
     }
 
     public StatData(Parcel in) {
@@ -32,7 +32,7 @@ public class StatData implements Parcelable {
         this.time = in.readInt();
         this.distance = in.readDouble();
         this.avg_speed = in.readDouble();
-        this.gps_coord = in.readString();
+        this.gpsCoordinates = in.readString();
 //        this.speeds = in.readString();
 //        this.times_list = in.readString();
     }
@@ -49,16 +49,16 @@ public class StatData implements Parcelable {
         return distance;
     }
 
-    public String getTime_traveled() {
-        return time_traveled;
+    public String getTimeTravelled() {
+        return timeTravelled;
     }
 
     public double getAvg_speed() {
         return avg_speed;
     }
 
-    public String getGps_coord() {
-        return gps_coord;
+    public String getGpsCoordinates() {
+        return gpsCoordinates;
     }
 
     public String getSpeeds() { return speeds; }
@@ -76,7 +76,7 @@ public class StatData implements Parcelable {
         dest.writeInt(this.time);
         dest.writeDouble(this.distance);
         dest.writeDouble(this.avg_speed);
-        dest.writeString(this.gps_coord);
+        dest.writeString(this.gpsCoordinates);
 //        dest.writeString(this.speeds);
 //        dest.writeString(this.times_list);
     }
