@@ -21,6 +21,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -89,8 +91,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         Polyline path = map.addPolyline(exerciseData.pathOptions);
         path.setPoints(exerciseData.getPathPoints());
 
-        if (!exerciseData.getPathPoints().isEmpty())
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(getPathCentre(exerciseData.getPathPoints()), 14.2f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ExerciseData.getPathCentre(exerciseData.getPathPoints()), 14.2f));
     }
 
     @Override
@@ -170,33 +171,10 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         editor.apply();
     }
 
-    public static LatLng getPathCentre(List<LatLng> points) {
-        LatLng centre;
-        double minLat = points.get(0).latitude;
-        double minLng = points.get(0).longitude;
-        double maxLat = points.get(0).latitude;
-        double maxLng = points.get(0).longitude;
-
-        for (LatLng point : points) {
-            if (point.latitude < minLat)
-                minLat = point.latitude;
-            if (point.latitude > maxLat)
-                maxLat = point.latitude;
-
-            if (point.longitude < minLng)
-                minLng = point.longitude;
-            if (point.longitude > maxLng)
-                maxLng = point.longitude;
-        }
-
-        centre = new LatLng((minLat + maxLat) / 2, (minLng + maxLng) / 2);
-
-        return centre;
-    }
-
     private void saveLogToDb() {
         Log.d("DB", "WRITE");
 
+        Gson gson = new Gson();
         SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
         String currDateString = df.format(Calendar.getInstance().getTime());
         exerciseData.setDate(currDateString);
@@ -204,7 +182,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);
         dbAdapter.openWritable();
 
-        Log.d("DB", "Write result: " + dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), ""));
+        Log.d("DB", "Write result: " + dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), gson.toJson(exerciseData.getPathPoints())));
 
         List<ExerciseData> records = dbAdapter.getAllRecordEntries();
 

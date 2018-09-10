@@ -1,10 +1,12 @@
 package com.example.annie.dewatch;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class ExerciseData {
     private ArrayList<Double> distList;
     private ArrayList<Integer> timeList;
     private String recordType; // for use in best record db
+    private String latLngJson;
 
     public static final String HAS_STATS = "hasStats";
 
@@ -73,7 +76,7 @@ public class ExerciseData {
         this.totalTime = time;
         this.totalDist = distance;
         this.avgSpeed = speed;
-        // todo: coordinates
+        this.latLngJson = coordinates;
     }
 
     ExerciseData(String recordType, String date, int time, double distance, double speed) {
@@ -175,7 +178,33 @@ public class ExerciseData {
         return recordType;
     }
 
-    public void setRecordType(String recordType) {
-        this.recordType = recordType;
+    public String getCoordinatesJson() {
+        return latLngJson;
+    }
+
+    public static LatLng getPathCentre(List<LatLng> points) {
+        if(points.isEmpty()) {
+            Log.e("getPathCentre", "List<LatLng> points is empty");
+            return new LatLng(0, 0);
+        }
+
+        double minLat = points.get(0).latitude;
+        double minLng = points.get(0).longitude;
+        double maxLat = points.get(0).latitude;
+        double maxLng = points.get(0).longitude;
+
+        for (LatLng point : points) {
+            if (point.latitude < minLat)
+                minLat = point.latitude;
+            if (point.latitude > maxLat)
+                maxLat = point.latitude;
+
+            if (point.longitude < minLng)
+                minLng = point.longitude;
+            if (point.longitude > maxLng)
+                maxLng = point.longitude;
+        }
+
+        return new LatLng((minLat + maxLat) / 2, (minLng + maxLng) / 2);
     }
 }

@@ -87,8 +87,8 @@ public class StatsFragment extends Fragment {
         }
 
         for(ExerciseData data : allEntries) {
-            recordsList.add(createHash(data));
-            resultDataObject.add(new StatData(data.getDate(), data.getTotalTime(), data.getTotalDist(), data.getAvgSpeed(), ""));
+            recordsList.add(0, createHash(data));
+            resultDataObject.add(0, new StatData(data.getDate(), data.getTotalTime(), data.getTotalDist(), data.getAvgSpeed(), data.getCoordinatesJson()));
         }
 
         initAdapter();
