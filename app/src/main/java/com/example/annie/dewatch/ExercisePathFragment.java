@@ -1,6 +1,7 @@
 package com.example.annie.dewatch;
 
 import android.app.Activity;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -100,7 +101,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             }
 
             locationListener = getLocationListener();
-            locationManager.requestLocationUpdates(getLocationProvider(), 500, 0, locationListener);
+            locationManager.requestLocationUpdates(getLocationProvider(), 100, 0, locationListener);
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
@@ -186,12 +187,10 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
     }
 
     private String getLocationProvider() {
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return LocationManager.NETWORK_PROVIDER;
-        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            return LocationManager.GPS_PROVIDER;
-        } else
-            return null;
+        Criteria providerCriteria = new Criteria();
+        providerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+        return locationManager.getBestProvider(providerCriteria, true);
     }
 
     private void requestLocationOn() {

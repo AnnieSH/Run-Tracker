@@ -181,6 +181,10 @@ public class ExerciseData {
         return latLngJson;
     }
 
+    public LatLng getPathCentre() {
+        return getPathCentre(this.pathPoints);
+    }
+
     public static LatLng getPathCentre(List<LatLng> points) {
         if(points.isEmpty()) {
             Log.e("getPathCentre", "List<LatLng> points is empty");

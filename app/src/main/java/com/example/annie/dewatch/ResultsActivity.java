@@ -78,7 +78,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         Polyline path = map.addPolyline(exerciseData.pathOptions);
         path.setPoints(exerciseData.getPathPoints());
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ExerciseData.getPathCentre(exerciseData.getPathPoints()), 14.2f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(exerciseData.getPathCentre(), 14.2f));
     }
 
     @Override
