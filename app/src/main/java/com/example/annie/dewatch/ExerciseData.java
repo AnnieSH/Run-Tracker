@@ -25,14 +25,14 @@ public class ExerciseData {
     public Polyline path;
     private List<LatLng> pathPoints;
     private ArrayList<Double> speedsList;
-    private ArrayList<Double> distList;
-    private ArrayList<Integer> timeList;
     private String recordType; // for use in best record db
     private String latLngJson;
+    private String speedGraphPointsJson;
+    private ArrayList<SpeedPoint> speedGraphPoints;
 
     public static final String HAS_STATS = "hasStats";
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
+    public static final String DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss"; // todo use jodatime
 
     public static final String LAST_DATE = "lastDate";
     public static final String LAST_TIME = "lastTime";
@@ -64,18 +64,18 @@ public class ExerciseData {
                 geodesic(true).
                 color(Color.rgb(0, 155, 224)).
                 width(10);
-        distList = new ArrayList<>();
         speedsList = new ArrayList<>();
-        timeList = new ArrayList<>();
         pathPoints = new ArrayList<>();
+        speedGraphPoints = new ArrayList<>();
     }
 
-    ExerciseData(String date, int time, double distance, double speed, String coordinates) {
+    ExerciseData(String date, int time, double distance, double speed, String coordinates, String speedGraphPoints) {
         this.date = date;
         this.totalTime = time;
         this.totalDist = distance;
         this.avgSpeed = speed;
         this.latLngJson = coordinates;
+        this.speedGraphPointsJson = speedGraphPoints;
     }
 
     ExerciseData(String recordType, String date, int time, double distance, double speed) {
@@ -102,8 +102,6 @@ public class ExerciseData {
 
     public synchronized void setDistance(double distance) {
         totalDist = distance + totalDist;
-        timeList.add(totalTime);
-        distList.add(distance);
         avgSpeed = calculateSpeed(totalDist, totalTime);
         speedsList.add(avgSpeed);
     }
@@ -146,6 +144,14 @@ public class ExerciseData {
         return avgSpeed;
     }
 
+    public void addSpeedGraphPoint(int time, double speed) {
+        speedGraphPoints.add(new SpeedPoint(time, speed));
+    }
+
+    public ArrayList<SpeedPoint> getSpeedGraphPoints() {
+        return speedGraphPoints;
+    }
+
     /**
      * Calculate the distance in metres between two LatLng
      *
@@ -181,6 +187,10 @@ public class ExerciseData {
         return latLngJson;
     }
 
+    public String getSpeedGraphPointsJson() {
+        return speedGraphPointsJson;
+    }
+
     public LatLng getPathCentre() {
         return getPathCentre(this.pathPoints);
     }
@@ -209,5 +219,23 @@ public class ExerciseData {
         }
 
         return new LatLng((minLat + maxLat) / 2, (minLng + maxLng) / 2);
+    }
+
+    class SpeedPoint {
+        private int time;
+        private double speed;
+
+        int getTime() {
+            return time;
+        }
+
+        double getSpeed() {
+            return speed;
+        }
+
+        SpeedPoint(int time, double speed) {
+            this.time = time;
+            this.speed = speed;
+        }
     }
 }

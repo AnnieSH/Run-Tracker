@@ -53,7 +53,6 @@ public class ExerciseGraphFragment extends Fragment {
 
     public void updateSpeedGraph(int time, double speed) {
         boolean scroll = time >= 60;
-
         speedSeries.appendData(new DataPoint(time, speed), scroll, 60);
     }
 }

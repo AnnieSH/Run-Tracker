@@ -154,7 +154,11 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         distText.setText(String.format(getString(R.string.dist_text), exerciseData.getTotalDist()));
         speedText.setText(String.format(getString(R.string.speed_text), exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1)));
 
-        exGraphFrag.updateSpeedGraph(exerciseData.getTotalTime(), exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1));
+        int time = exerciseData.getTotalTime();
+        double speed = exerciseData.getSpeedsList().get(exerciseData.getSpeedsList().size() - 1);
+
+        exerciseData.addSpeedGraphPoint(time, speed);
+        exGraphFrag.updateSpeedGraph(time, speed);
     }
 
     public void updateTime(int time) {

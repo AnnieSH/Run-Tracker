@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        emailEditText = (EditText) findViewById(R.id.login_editText_email);
+        emailEditText = findViewById(R.id.login_editText_email);
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        passwordEditText = (EditText) findViewById(R.id.login_editText_password);
+        passwordEditText = findViewById(R.id.login_editText_password);
         passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginButton = (Button) findViewById(R.id.login_btn_login);
+        loginButton = findViewById(R.id.login_btn_login);
         Button signupButton = findViewById(R.id.signup_btn);
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override

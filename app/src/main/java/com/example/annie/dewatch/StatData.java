@@ -13,18 +13,17 @@ public class StatData implements Parcelable {
     private String date;
     private int time;
     private double distance;
-    private String timeTravelled;
     private double avg_speed;
     private String gpsCoordinates;
-    private String speeds;
-    private String times_list;
+    private String speedGraphPoints;
 
-    public StatData(String date, int time, double distance, double avg_speed, String gpsCoordinates) {
+    public StatData(String date, int time, double distance, double avg_speed, String gpsCoordinates, String speedGraphPoints) {
         this.date = date;
         this.time = time;
         this.distance = distance;
         this.avg_speed = avg_speed;
         this.gpsCoordinates = gpsCoordinates;
+        this.speedGraphPoints = speedGraphPoints;
     }
 
     public StatData(Parcel in) {
@@ -33,8 +32,7 @@ public class StatData implements Parcelable {
         this.distance = in.readDouble();
         this.avg_speed = in.readDouble();
         this.gpsCoordinates = in.readString();
-//        this.speeds = in.readString();
-//        this.times_list = in.readString();
+        this.speedGraphPoints = in.readString();
     }
 
     public String getDate() {
@@ -49,10 +47,6 @@ public class StatData implements Parcelable {
         return distance;
     }
 
-    public String getTimeTravelled() {
-        return timeTravelled;
-    }
-
     public double getAvg_speed() {
         return avg_speed;
     }
@@ -61,9 +55,9 @@ public class StatData implements Parcelable {
         return gpsCoordinates;
     }
 
-    public String getSpeeds() { return speeds; }
-
-    public String getTimes_list() { return times_list; }
+    public String getSpeedGraphPoints() {
+        return speedGraphPoints;
+    }
 
     @Override
     public int describeContents() {
@@ -77,8 +71,7 @@ public class StatData implements Parcelable {
         dest.writeDouble(this.distance);
         dest.writeDouble(this.avg_speed);
         dest.writeString(this.gpsCoordinates);
-//        dest.writeString(this.speeds);
-//        dest.writeString(this.times_list);
+        dest.writeString(this.speedGraphPoints);
     }
 
     public static final Parcelable.Creator<StatData> CREATOR = new Parcelable.Creator<StatData>() {

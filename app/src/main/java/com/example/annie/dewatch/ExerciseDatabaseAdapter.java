@@ -32,7 +32,8 @@ public final class ExerciseDatabaseAdapter {
                     ExerciseDataEntry.COLUMN_NAME_TIME + " INTEGER," +
                     ExerciseDataEntry.COLUMN_NAME_DISTANCE + " REAL," +
                     ExerciseDataEntry.COLUMN_NAME_SPEED + " REAL," +
-                    ExerciseDataEntry.COLUMN_NAME_COORDINATES + " TEXT)";
+                    ExerciseDataEntry.COLUMN_NAME_COORDINATES + " TEXT," +
+                    ExerciseDataEntry.COLUMN_NAME_SPEED_GRAPH_POINTS + " TEXT)";
 
     public static final String SQL_CREATE_RECORDS_TABLE =
             "CREATE TABLE IF NOT EXISTS " + RecordEntry.TABLE_NAME + " (" +
@@ -54,6 +55,7 @@ public final class ExerciseDatabaseAdapter {
         public static final String COLUMN_NAME_DISTANCE = "distance";
         public static final String COLUMN_NAME_SPEED = "speed";
         public static final String COLUMN_NAME_COORDINATES = "coordinates";
+        public static final String COLUMN_NAME_SPEED_GRAPH_POINTS = "speed_graph_points";
     }
 
     public static class RecordEntry implements BaseColumns {
@@ -96,13 +98,14 @@ public final class ExerciseDatabaseAdapter {
      * @param coordinates
      * @return Result from db insert, index in the db
      */
-    public long insertExerciseEntry(String date, int time, double distance, double speed, String coordinates) throws SQLException {
+    public long insertExerciseEntry(String date, int time, double distance, double speed, String coordinates, String speedGraphPoints) throws SQLException {
         ContentValues newValues = new ContentValues();
         newValues.put(ExerciseDataEntry.COLUMN_NAME_DATE, date);
         newValues.put(ExerciseDataEntry.COLUMN_NAME_TIME, time);
         newValues.put(ExerciseDataEntry.COLUMN_NAME_DISTANCE, distance);
         newValues.put(ExerciseDataEntry.COLUMN_NAME_SPEED, speed);
         newValues.put(ExerciseDataEntry.COLUMN_NAME_COORDINATES, coordinates);
+        newValues.put(ExerciseDataEntry.COLUMN_NAME_SPEED_GRAPH_POINTS, speedGraphPoints);
 
         return db.insertOrThrow(ExerciseDataEntry.TABLE_NAME, null, newValues);
     }
@@ -118,9 +121,10 @@ public final class ExerciseDatabaseAdapter {
         double distance = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DISTANCE));
         double speed = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_SPEED));
         String coordinates = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_COORDINATES));
+        String speedGraphPoints = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_SPEED_GRAPH_POINTS));
         cursor.close();
 
-        return new ExerciseData(date, time, distance, speed, coordinates);
+        return new ExerciseData(date, time, distance, speed, coordinates, speedGraphPoints);
     }
 
     public List<ExerciseData> getAllExerciseEntries() {
@@ -136,8 +140,9 @@ public final class ExerciseDatabaseAdapter {
             double distance = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_DISTANCE));
             double speed = cursor.getDouble(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_SPEED));
             String coordinates = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_COORDINATES));
+            String speedGraphPoints = cursor.getString(cursor.getColumnIndex(ExerciseDataEntry.COLUMN_NAME_SPEED_GRAPH_POINTS));
 
-            allEntries.add(new ExerciseData(date, time, distance, speed, coordinates));
+            allEntries.add(new ExerciseData(date, time, distance, speed, coordinates, speedGraphPoints));
         }
 
         cursor.close();

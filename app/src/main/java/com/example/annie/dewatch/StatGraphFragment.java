@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,16 +26,13 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
 
     private StatData resultDataObject;
 
-    List<Integer> timesList;
-    List<Double> speedsList;
-
     public StatGraphFragment() { }
 
 
     public static StatGraphFragment newInstance(StatData argObject) {
         StatGraphFragment fragment = new StatGraphFragment();
         Bundle args = new Bundle();
-        args.putParcelable("RESULT_DATA_OBJ", argObject);
+        args.putParcelable(StatData.INTENT_KEY, argObject);
         fragment.setArguments(args);
 
         return fragment;
@@ -48,7 +43,7 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stats_graph, container, false);
 
-        resultDataObject = getArguments().getParcelable("RESULT_DATA_OBJ");
+        resultDataObject = getArguments().getParcelable(StatData.INTENT_KEY);
 
         GraphView speedGraph = rootView.findViewById(R.id.stats_speed_graph);
         GridLabelRenderer speedRenderer = speedGraph.getGridLabelRenderer();
@@ -57,14 +52,9 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
         speedRenderer.setPadding(32);
         speedGraph.setTitle("Speed");
 
-        String speedsJson = resultDataObject.getSpeeds();
-        String timesJson = resultDataObject.getTimes_list();
-
-        Type timesListType = new TypeToken<ArrayList<Integer>>(){}.getType();
-        timesList = new Gson().fromJson(timesJson, timesListType);
-
-        Type speedListType = new TypeToken<ArrayList<Double>>(){}.getType();
-        speedsList = new Gson().fromJson(speedsJson, speedListType);
+        Gson gson = new Gson();
+        String speedsJson = resultDataObject.getSpeedGraphPoints();
+        List<ExerciseData.SpeedPoint> speedsList = Arrays.asList(gson.fromJson(speedsJson, ExerciseData.SpeedPoint[].class));
 
         speedSeries = new LineGraphSeries<>();
         speedSeries.setDrawDataPoints(true);
@@ -74,24 +64,21 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
         speedGraph.getViewport().setXAxisBoundsManual(true);
         speedGraph.getViewport().setMinX(0);
 
-//        if(timesList.size() > 0) {
-//            speedGraph.getViewport().setMaxX(timesList.get(timesList.size()-1));
-//        }
-//
-//        Log.d(TAG, "timesList.size : " + timesList.size());
-//        Log.d(TAG, "speedsList size: " + speedsList.size());
-//
-//        for(int i = 0; i < timesList.size(); i++){
-//            updateSpeedGraph(timesList.get(i), speedsList.get(i));
-//        }
+        if(speedsList.size() > 0) {
+            speedGraph.getViewport().setMaxX(speedsList.get(speedsList.size()-1).getTime());
+        }
+
+        for(ExerciseData.SpeedPoint point : speedsList){
+            updateSpeedGraph(point.getTime(), point.getSpeed(), speedsList.size());
+        }
 
         return rootView;
     }
 
-    public void updateSpeedGraph(int time, double speed) {
+    public void updateSpeedGraph(int time, double speed, int maxGraphSize) {
         boolean scroll = time >= 60;
 
-        speedSeries.appendData(new DataPoint(time, speed), scroll, speedsList.size());
+        speedSeries.appendData(new DataPoint(time, speed), scroll, maxGraphSize);
     }
 
 }
