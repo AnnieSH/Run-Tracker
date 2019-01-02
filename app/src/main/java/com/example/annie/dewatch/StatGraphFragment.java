@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.annie.dewatch.ExerciseDataStructures.SpeedPoint;
+import com.example.annie.dewatch.ExerciseDataStructures.StatData;
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
@@ -54,7 +56,7 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
 
         Gson gson = new Gson();
         String speedsJson = resultDataObject.getSpeedGraphPoints();
-        List<ExerciseData.SpeedPoint> speedsList = Arrays.asList(gson.fromJson(speedsJson, ExerciseData.SpeedPoint[].class));
+        List<SpeedPoint> speedsList = Arrays.asList(gson.fromJson(speedsJson, SpeedPoint[].class));
 
         speedSeries = new LineGraphSeries<>();
         speedSeries.setDrawDataPoints(true);
@@ -68,8 +70,9 @@ public class StatGraphFragment extends android.support.v4.app.Fragment {
             speedGraph.getViewport().setMaxX(speedsList.get(speedsList.size()-1).getTime());
         }
 
-        for(ExerciseData.SpeedPoint point : speedsList){
-            updateSpeedGraph(point.getTime(), point.getSpeed(), speedsList.size());
+        updateSpeedGraph(0, 0, speedsList.size() + 1);
+        for(SpeedPoint point : speedsList){
+            updateSpeedGraph(point.getTime(), point.getSpeed(), speedsList.size() + 1);
         }
 
         return rootView;

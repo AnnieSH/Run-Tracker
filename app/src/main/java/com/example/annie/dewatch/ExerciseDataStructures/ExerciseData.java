@@ -1,4 +1,4 @@
-package com.example.annie.dewatch;
+package com.example.annie.dewatch.ExerciseDataStructures;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -56,7 +56,7 @@ public class ExerciseData {
     public static final String DISTANCE_RECORD_SPEED = "distRecordSpeed";
 
 
-    ExerciseData() {
+    public ExerciseData() {
         totalDist = 0;
         totalTime = -1;
         avgSpeed = 0;
@@ -69,7 +69,7 @@ public class ExerciseData {
         speedGraphPoints = new ArrayList<>();
     }
 
-    ExerciseData(String date, int time, double distance, double speed, String coordinates, String speedGraphPoints) {
+    public ExerciseData(String date, int time, double distance, double speed, String coordinates, String speedGraphPoints) {
         this.date = date;
         this.totalTime = time;
         this.totalDist = distance;
@@ -78,7 +78,7 @@ public class ExerciseData {
         this.speedGraphPointsJson = speedGraphPoints;
     }
 
-    ExerciseData(String recordType, String date, int time, double distance, double speed) {
+    public ExerciseData(String recordType, String date, int time, double distance, double speed) {
         this.date = date;
         this.totalTime = time;
         this.totalDist = distance;
@@ -219,23 +219,5 @@ public class ExerciseData {
         }
 
         return new LatLng((minLat + maxLat) / 2, (minLng + maxLng) / 2);
-    }
-
-    class SpeedPoint {
-        private int time;
-        private double speed;
-
-        int getTime() {
-            return time;
-        }
-
-        double getSpeed() {
-            return speed;
-        }
-
-        SpeedPoint(int time, double speed) {
-            this.time = time;
-            this.speed = speed;
-        }
     }
 }

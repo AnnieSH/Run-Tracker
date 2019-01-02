@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

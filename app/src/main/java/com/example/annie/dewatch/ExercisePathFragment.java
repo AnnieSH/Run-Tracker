@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -103,6 +104,8 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             locationListener = getLocationListener();
             locationManager.requestLocationUpdates(getLocationProvider(), 0, 0, locationListener);
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
+            Location lastLocation = locationManager.getLastKnownLocation(locProvider);
+            addToPath(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
             e.printStackTrace();

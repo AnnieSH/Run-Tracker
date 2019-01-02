@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
+
 import java.util.ArrayList;
 import java.util.List;
 

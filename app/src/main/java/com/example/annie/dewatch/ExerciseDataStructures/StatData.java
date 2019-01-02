@@ -1,4 +1,4 @@
-package com.example.annie.dewatch;
+package com.example.annie.dewatch.ExerciseDataStructures;
 
 import android.os.Parcel;
 import android.os.Parcelable;

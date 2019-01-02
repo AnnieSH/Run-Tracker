@@ -30,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
 import com.example.annie.dewatch.OpenWeatherMap.WeatherData;
 import com.google.gson.Gson;
 
@@ -114,6 +115,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        profileActivity.setActionBarTitle(String.format(getString(R.string.welcome_text), currentUser.getName()));
         displayRecords();
     }
 
@@ -232,7 +234,7 @@ public class ProfileFragment extends Fragment {
                     Gson gson = new Gson();
                     WeatherData data = gson.fromJson(response, WeatherData.class);
                     TextView weatherTextView = rootView.findViewById(R.id.current_weather_textview);
-                    weatherTextView.setText("Current weather: " + data.getWeather() + "\r\nGo for a run?");
+                    weatherTextView.setText(String.format(getString(R.string.current_weather_display), data.getWeather(), data.getTemperature()));
 
                     Log.d("WEATHER READ", data.getWeather());
                 }

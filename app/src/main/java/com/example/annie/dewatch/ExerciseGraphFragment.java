@@ -47,6 +47,7 @@ public class ExerciseGraphFragment extends Fragment {
         speedGraph.getViewport().setXAxisBoundsManual(true);
         speedGraph.getViewport().setMinX(0);
         speedGraph.getViewport().setMaxX(60);
+        speedSeries.appendData(new DataPoint(0, 0), false, 60);
 
         return rootView;
     }

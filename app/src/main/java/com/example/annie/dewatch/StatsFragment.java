@@ -17,6 +17,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
+import com.example.annie.dewatch.ExerciseDataStructures.StatData;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

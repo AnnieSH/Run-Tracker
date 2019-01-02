@@ -1,6 +1,6 @@
 <resources>
     <string name="initial_welcome">Welcome to DEWatch</string>
-    <string name="welcome_name_question">Let\'s get you started. What should we call you?</string>
+    <string name="welcome_name_question">Let\'s get you started. What is your name?</string>
     <string name="app_name">DEWatch</string>
     <string name="profile_nav_home">Home</string>
     <string name="profile_nav_logs">Logs</string>
@@ -13,5 +13,6 @@
     <string name="welcome_text">Hello, %1$s!</string>
     <string name="last_run">You last ran %s</string>
     <string name="last_run_stats">for %1$d min, %2$.1f km, at an average of %3$.1f km/h</string>
-    <string name="exercise_stat">%1s - %2$d min %3$d sec %4$.1f km %5$.1f km/h</string>
+    <string name="exercise_stat">%1s: %2$d min %3$d sec %4$.1f km %5$.1f km/h</string>
+    <string name="current_weather_display">Current weather: \n%1$s, %2$.1f°C</string>
 </resources>

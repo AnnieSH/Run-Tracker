@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
@@ -69,10 +70,9 @@ public class ProgressFragment extends Fragment {
         dbAdapter.close();
 
         for(ExerciseData data : allEntries) {
-            distSeries.appendData(new DataPoint(allEntries.indexOf(data), data.getTotalDist()), false, allEntries.size());
-            timeSeries.appendData(new DataPoint(allEntries.indexOf(data), data.getTotalTime() / 60.0), false, allEntries.size());
-            speedSeries.appendData(new DataPoint(allEntries.indexOf(data), data.getAvgSpeed()), false, allEntries.size());
-
+            distSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getTotalDist()), false, allEntries.size());
+            timeSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getTotalTime() / 60.0), false, allEntries.size());
+            speedSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getAvgSpeed()), false, allEntries.size());
         }
 
         setGraphMaxValues(distGraph, allEntries.size(), distSeries.getHighestValueY() + 0.5);
@@ -98,7 +98,7 @@ public class ProgressFragment extends Fragment {
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setScrollable(false);
-        graph.getViewport().setMinX(0);
+        graph.getViewport().setMinX(1);
         graph.getViewport().setMinY(0);
         graph.getGridLabelRenderer().setHumanRounding(true);
     }

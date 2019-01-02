@@ -66,7 +66,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                     currentUser.setName(input.getText().toString());
                     editName.setText(currentUser.getName());
                     currentUser.setLoggedIn(getBaseContext());
-                    Toast.makeText(ProfileSettingsActivity.this, "Update Successful" + input.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
