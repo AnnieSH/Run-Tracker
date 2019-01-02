@@ -101,10 +101,11 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             }
 
             locationListener = getLocationListener();
-            locationManager.requestLocationUpdates(getLocationProvider(), 100, 0, locationListener);
+            locationManager.requestLocationUpdates(getLocationProvider(), 0, 0, locationListener);
             exerciseData.path = map.addPolyline(exerciseData.pathOptions);
         } catch(SecurityException e) {
             Log.e(TAG, "Path fragment opened without permission");
+            e.printStackTrace();
         }
     }
 
