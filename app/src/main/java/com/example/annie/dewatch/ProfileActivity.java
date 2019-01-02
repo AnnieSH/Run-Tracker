@@ -1,8 +1,6 @@
 package com.example.annie.dewatch;
 
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,17 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.annie.dewatch.OpenWeatherMap.WeatherData;
-import com.google.gson.Gson;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -65,7 +53,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
-        setWeatherData();
+    }
+
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -75,44 +66,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-    }
-
-    private void setWeatherData() {
-        LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        Location currentLocation = null;
-        try {
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-
-        if(currentLocation != null) {
-            String apiUrl = WeatherData.getCurrentCityWeatherUrl(currentLocation.getLatitude(), currentLocation.getLongitude());
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-            StringRequest weatherRequest = new StringRequest(Request.Method.GET, apiUrl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Gson gson = new Gson();
-                    WeatherData data = gson.fromJson(response, WeatherData.class);
-
-                    Log.d("WEATHER READ", data.getWeather());
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            });
-
-            requestQueue.add(weatherRequest);
-        }
-
-    }
-
-    public void setActionBarTitle(String title) {
-        getSupportActionBar().setTitle(title);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

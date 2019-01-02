@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -22,11 +24,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.annie.dewatch.OpenWeatherMap.WeatherData;
+import com.google.gson.Gson;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 public class ProfileFragment extends Fragment {
     View rootView;
@@ -66,6 +79,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        setWeatherData();
         displayRecords();
 
         return rootView;
@@ -193,5 +207,43 @@ public class ProfileFragment extends Fragment {
                 });
 
         builder.create().show();
+    }
+
+    private void setWeatherData() {
+        if (ActivityCompat.checkSelfPermission(profileActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            getLocationPermission();
+        }
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        Location currentLocation = null;
+        try {
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+
+        if(currentLocation != null) {
+            String apiUrl = WeatherData.getCurrentCityWeatherUrl(currentLocation.getLatitude(), currentLocation.getLongitude());
+            RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+            StringRequest weatherRequest = new StringRequest(Request.Method.GET, apiUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Gson gson = new Gson();
+                    WeatherData data = gson.fromJson(response, WeatherData.class);
+                    TextView weatherTextView = rootView.findViewById(R.id.current_weather_textview);
+                    weatherTextView.setText("Current weather: " + data.getWeather() + "\r\nGo for a run?");
+
+                    Log.d("WEATHER READ", data.getWeather());
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+
+            requestQueue.add(weatherRequest);
+        }
     }
 }
