@@ -29,8 +29,6 @@ public class ProgressFragment extends Fragment {
     private GraphView timeGraph;
     private GraphView speedGraph;
 
-    int listSize;
-
     public ProgressFragment() { }
 
     public static ProgressFragment newInstance() {
@@ -55,29 +53,31 @@ public class ProgressFragment extends Fragment {
         speedGraph = rootView.findViewById(R.id.progress_speed_graph);
         graphSetup(speedGraph, "Speed", "Exercises", "km/h");
 
-        distSeries = new LineGraphSeries<>();
-        distGraph.addSeries(distSeries);
-
-        timeSeries = new LineGraphSeries<>();
-        timeGraph.addSeries(timeSeries);
-
-        speedSeries = new LineGraphSeries<>();
-        speedGraph.addSeries(speedSeries);
-
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
         dbAdapter.openReadable();
         List<ExerciseData> allEntries = dbAdapter.getAllExerciseEntries();
         dbAdapter.close();
 
-        for(ExerciseData data : allEntries) {
-            distSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getTotalDist()), false, allEntries.size());
-            timeSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getTotalTime() / 60.0), false, allEntries.size());
-            speedSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getAvgSpeed()), false, allEntries.size());
-        }
+        if(allEntries != null) {
+            distSeries = new LineGraphSeries<>();
+            distGraph.addSeries(distSeries);
 
-        setGraphMaxValues(distGraph, allEntries.size(), distSeries.getHighestValueY() + 0.5);
-        setGraphMaxValues(timeGraph, allEntries.size(), timeSeries.getHighestValueY() + 0.5);
-        setGraphMaxValues(speedGraph, allEntries.size(), speedSeries.getHighestValueY() + 0.5);
+            timeSeries = new LineGraphSeries<>();
+            timeGraph.addSeries(timeSeries);
+
+            speedSeries = new LineGraphSeries<>();
+            speedGraph.addSeries(speedSeries);
+
+            for (ExerciseData data : allEntries) {
+                distSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getTotalDist()), false, allEntries.size());
+                timeSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getTotalTime() / 60.0), false, allEntries.size());
+                speedSeries.appendData(new DataPoint(allEntries.indexOf(data) + 1, data.getAvgSpeed()), false, allEntries.size());
+            }
+
+            setGraphMaxValues(distGraph, allEntries.size(), distSeries.getHighestValueY() + 0.5);
+            setGraphMaxValues(timeGraph, allEntries.size(), timeSeries.getHighestValueY() + 0.5);
+            setGraphMaxValues(speedGraph, allEntries.size(), speedSeries.getHighestValueY() + 0.5);
+        }
 
         return rootView;
     }
@@ -98,12 +98,12 @@ public class ProgressFragment extends Fragment {
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setScrollable(false);
-        graph.getViewport().setMinX(1);
         graph.getViewport().setMinY(0);
         graph.getGridLabelRenderer().setHumanRounding(true);
     }
 
     private void setGraphMaxValues(GraphView graph, int maxX, double maxY) {
+        graph.getViewport().setMinX(1);
         graph.getViewport().setMaxX(maxX);
         graph.getViewport().setMaxY(maxY);
     }
