@@ -11,7 +11,10 @@ import android.view.ViewGroup;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.List;
 
 public class ProgressFragment extends Fragment {
     Context context;
@@ -60,6 +63,22 @@ public class ProgressFragment extends Fragment {
         speedSeries = new LineGraphSeries<>();
         speedGraph.addSeries(speedSeries);
 
+        ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
+        dbAdapter.openReadable();
+        List<ExerciseData> allEntries = dbAdapter.getAllExerciseEntries();
+        dbAdapter.close();
+
+        for(ExerciseData data : allEntries) {
+            distSeries.appendData(new DataPoint(allEntries.indexOf(data), data.getTotalDist()), false, allEntries.size());
+            timeSeries.appendData(new DataPoint(allEntries.indexOf(data), data.getTotalTime() / 60.0), false, allEntries.size());
+            speedSeries.appendData(new DataPoint(allEntries.indexOf(data), data.getAvgSpeed()), false, allEntries.size());
+
+        }
+
+        setGraphMaxValues(distGraph, allEntries.size(), distSeries.getHighestValueY() + 0.5);
+        setGraphMaxValues(timeGraph, allEntries.size(), timeSeries.getHighestValueY() + 0.5);
+        setGraphMaxValues(speedGraph, allEntries.size(), speedSeries.getHighestValueY() + 0.5);
+
         return rootView;
     }
 
@@ -78,8 +97,14 @@ public class ProgressFragment extends Fragment {
         graph.setTitleTextSize(50);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setScrollable(true);
+        graph.getViewport().setScrollable(false);
+        graph.getViewport().setMinX(0);
         graph.getViewport().setMinY(0);
         graph.getGridLabelRenderer().setHumanRounding(true);
+    }
+
+    private void setGraphMaxValues(GraphView graph, int maxX, double maxY) {
+        graph.getViewport().setMaxX(maxX);
+        graph.getViewport().setMaxY(maxY);
     }
 }
