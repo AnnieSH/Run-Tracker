@@ -22,10 +22,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexEnabled true
+            buildConfigField 'String', "OpenWeatherMapKey", open_weather_map_key
         }
         debug {
             minifyEnabled false
-
+            buildConfigField 'String', "OpenWeatherMapKey", open_weather_map_key
         }
 
     }

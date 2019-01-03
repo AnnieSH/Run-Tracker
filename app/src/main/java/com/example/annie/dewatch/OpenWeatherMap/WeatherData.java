@@ -1,9 +1,10 @@
 package com.example.annie.dewatch.OpenWeatherMap;
 
+import com.example.annie.dewatch.BuildConfig;
 import com.google.android.gms.maps.model.LatLng;
 
 public class WeatherData {
-    private static final String API_KEY = "&APPID=7bd4dc637f9432797e4ab3356c137966";
+    private static final String API_KEY = "&APPID=" + BuildConfig.OpenWeatherMapKey;
     private LatLng VancouverCoordinates = new LatLng(49.2577143,-123.1939432);
     private final static String CURRENT_WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?";
 
