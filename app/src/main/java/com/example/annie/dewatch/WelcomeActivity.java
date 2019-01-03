@@ -1,11 +1,16 @@
 package com.example.annie.dewatch;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +21,7 @@ public class WelcomeActivity extends AppCompatActivity {
     Context context;
 
     TextView nameInput;
+    private final int LOC_PERMISSION_CODE = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +40,6 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         nameInput = findViewById(R.id.name_input);
-        Button readyButton = findViewById(R.id.ready_button);
-
-        createTextInputFocus();
-        readyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogIn();
-            }
-        });
-    }
-
-    private void createTextInputFocus() {
         nameInput.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -57,15 +51,22 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
-        nameInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        Button readyButton = findViewById(R.id.ready_button);
+        readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            public void onClick(View view) {
+                attemptLogIn();
+            }
+        });
 
-                    if(imm != null)
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
+        View background = findViewById(R.id.welcome_background);
+        background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                if(imm != null)
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
     }
@@ -77,8 +78,30 @@ public class WelcomeActivity extends AppCompatActivity {
             User user = User.getCurrentUser();
             user.logIn(nameInput.getText().toString().trim(), context);
 
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                getLocationPermission();
+                return;
+            }
+
             Intent loginIntent = new Intent(context, ProfileActivity.class);
             startActivity(loginIntent);
         }
+    }
+
+    /**
+     * Called when there is no location permission
+     */
+    private void getLocationPermission() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeActivity.this);
+
+        builder.setMessage("GPS permission is needed to track your runs")
+                .setPositiveButton("Okay!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        WelcomeActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOC_PERMISSION_CODE);
+                    }
+                });
+
+        builder.create().show();
     }
 }

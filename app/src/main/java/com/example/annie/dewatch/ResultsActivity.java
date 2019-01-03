@@ -3,12 +3,12 @@ package com.example.annie.dewatch;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -22,9 +22,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.annie.dewatch.ExercisePathFragment.exerciseData;
@@ -109,16 +108,8 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     private void saveLastExercise() {
         saveLogToDb();
 
-        SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
-        String currDateString = df.format(Calendar.getInstance().getTime());
-        long currDate = 0;
-        try {
-            currDate = df.parse(currDateString).getTime();
-        } catch (ParseException e) {
-            Log.e("Parse exception", e.getMessage());
-        }
-
-        String dateString = df.format(Calendar.getInstance().getTime());
+        LocalDate currentDate = LocalDate.now();
+        String dateString = currentDate.toString();
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor editor = prefs.edit();
@@ -130,7 +121,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         if (exerciseData.getTotalTime() > 0)
             speed = exerciseData.getTotalDist() / exerciseData.getTotalTime() * 3600;
 
-        editor.putLong(ExerciseData.LAST_DATE, currDate);
+        editor.putString(ExerciseData.LAST_DATE, dateString);
         editor.putInt(ExerciseData.LAST_TIME, min);
         editor.putFloat(ExerciseData.LAST_DISTANCE, (float) exerciseData.getTotalDist());
         editor.putFloat(ExerciseData.LAST_SPEED, (float) speed);
@@ -163,15 +154,14 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         Log.d("DB", "WRITE");
 
         Gson gson = new Gson();
-        SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
-        String currDateString = df.format(Calendar.getInstance().getTime());
-        exerciseData.setDate(currDateString);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        exerciseData.setDate(currentDateTime.toString());
 
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(this.context);
         dbAdapter.openWritable();
 
         Log.d("DB", "Write result: " +
-                dbAdapter.insertExerciseEntry(currDateString, exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), gson.toJson(exerciseData.getPathPoints()), gson.toJson(exerciseData.getSpeedGraphPoints())));
+                dbAdapter.insertExerciseEntry(exerciseData.getDate(), exerciseData.getTotalTime(), exerciseData.getTotalDist(), exerciseData.getAvgSpeed(), gson.toJson(exerciseData.getPathPoints()), gson.toJson(exerciseData.getSpeedGraphPoints())));
 
         List<ExerciseData> records = dbAdapter.getAllRecordEntries();
 

@@ -1,6 +1,7 @@
 package com.example.annie.dewatch;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,11 +35,8 @@ import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
 import com.example.annie.dewatch.OpenWeatherMap.WeatherData;
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -136,19 +134,10 @@ public class ProfileFragment extends Fragment {
         if (!prefs.getBoolean("hasStats", false)) {
             lastExercise.setText("You haven't exercised yet!");
         } else {
-            // TODO: Okay so this is super janky but basically I get the current date then convert
-            // todo  to get base date at midnight then convert back and there's probably a better way to do this
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Long date = TimeUnit.MILLISECONDS.toDays(prefs.getLong("lastDate", 0));
-            String currDateString = df.format(Calendar.getInstance().getTime());
-            int currDate = 0;
-            try {
-                currDate = (int) TimeUnit.MILLISECONDS.toDays(df.parse(currDateString).getTime());
-            } catch (ParseException e) {
-                Log.e("Parse exception", e.getMessage());
-            }
+            LocalDate currentDate = LocalDate.now();
+            LocalDate lastExerciseDate = LocalDate.parse(prefs.getString(ExerciseData.LAST_DATE, ""));
 
-            Long daysDiff = currDate - date;
+            int daysDiff = currentDate.compareTo(lastExerciseDate);
 
             if (daysDiff == 0) {
                 lastExercise.setText(String.format(getString(R.string.last_run), "today"));
@@ -198,9 +187,9 @@ public class ProfileFragment extends Fragment {
      * Called when there is no location permission
      */
     private void getLocationPermission() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setMessage("GPS permission is needed to track your path!")
+        builder.setMessage("GPS permission is needed to track your runs")
                 .setPositiveButton("Okay!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -212,10 +201,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setWeatherData() {
-        if (ActivityCompat.checkSelfPermission(profileActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            getLocationPermission();
-        }
-
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         Location currentLocation = null;
         try {

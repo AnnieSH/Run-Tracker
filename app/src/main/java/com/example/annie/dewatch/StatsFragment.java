@@ -20,12 +20,10 @@ import android.widget.SimpleAdapter;
 import com.example.annie.dewatch.ExerciseDataStructures.ExerciseData;
 import com.example.annie.dewatch.ExerciseDataStructures.StatData;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -149,19 +147,11 @@ public class StatsFragment extends Fragment {
                 Collections.sort(recordsList, new Comparator<HashMap<String, String>>() {
                     @Override
                     public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
-                        SimpleDateFormat df = new SimpleDateFormat(ExerciseData.DATE_FORMAT);
-                        try {
-                            Date date1 = df.parse(o1.get(HASH_KEY_DATE_FULL));
-                            Date date2 = df.parse(o2.get(HASH_KEY_DATE_FULL));
+                        LocalDateTime date1 = LocalDateTime.parse(o1.get(HASH_KEY_DATE_FULL));
+                        LocalDateTime date2 = LocalDateTime.parse(o2.get(HASH_KEY_DATE_FULL));
 
-                            if(date1.after(date2))
-                                return -1;
-                            else return 1;
-                        } catch (ParseException e) {
-                            Log.e("Compare parse", e.getMessage());
-                        }
-
-                        return 0;
+                        if(date1.isAfter(date2)) return -1;
+                        else return 1;
                     }
                 });
 
