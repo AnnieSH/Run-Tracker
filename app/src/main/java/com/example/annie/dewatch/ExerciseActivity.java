@@ -120,6 +120,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         exPathFrag.stopTimer();
+                        exPathFrag.stopLocationListener();
                         finish();
                     }
                 })

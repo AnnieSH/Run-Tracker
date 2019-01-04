@@ -112,7 +112,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         }
     }
 
-    private LocationListener getLocationListener() {
+    private synchronized LocationListener getLocationListener() {
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -148,7 +148,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
             updateDistance(distance);
         }
 
-        map.moveCamera(CameraUpdateFactory.newLatLng(point));
+        map.animateCamera(CameraUpdateFactory.newLatLng(point));
     }
 
     public void updateDistance(double dist) {
@@ -190,7 +190,7 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         timer.cancel();
     }
 
-    public void stopLocationListener() {
+    public synchronized void stopLocationListener() {
         locationManager.removeUpdates(locationListener);
     }
 
@@ -199,9 +199,5 @@ public class ExercisePathFragment extends Fragment implements OnMapReadyCallback
         providerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
 
         return locationManager.getBestProvider(providerCriteria, true);
-    }
-
-    private void requestLocationOn() {
-        
     }
 }
