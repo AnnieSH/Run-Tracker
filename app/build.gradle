@@ -22,11 +22,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexEnabled true
-            buildConfigField 'String', "OpenWeatherMapKey", open_weather_map_key
+            buildConfigField 'String', "OpenWeatherMapKey", dewatch_weather_key
+            buildConfigField 'String', "dewatch_googlemaps_key", dewatch_googlemaps_key
+            resValue 'string', "dewatch_googlemaps_key", dewatch_googlemaps_key
         }
         debug {
             minifyEnabled false
-            buildConfigField 'String', "OpenWeatherMapKey", open_weather_map_key
+            buildConfigField 'String', "OpenWeatherMapKey", dewatch_weather_key
+            buildConfigField 'String', "dewatch_googlemaps_key", dewatch_googlemaps_key
+            resValue 'string', "dewatch_googlemaps_key", dewatch_googlemaps_key
         }
 
     }

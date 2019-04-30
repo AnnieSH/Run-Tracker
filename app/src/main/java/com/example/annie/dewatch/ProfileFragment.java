@@ -117,6 +117,34 @@ public class ProfileFragment extends Fragment {
         displayRecords();
     }
 
+    private String getDaysSinceLastRunText(SharedPreferences prefs) {
+        if (!prefs.getBoolean("hasStats", false))
+            return "You haven't exercised yet!";
+        else {
+            LocalDate currentDate = LocalDate.now();
+            LocalDate lastExerciseDate = LocalDate.parse(prefs.getString(ExerciseData.LAST_DATE, ""));
+
+            int daysDiff = currentDate.compareTo(lastExerciseDate);
+            String daysAgoString = "yesterday";
+
+            if (daysDiff == 0) {
+                daysAgoString = "today";
+            } else if (daysDiff > 1) {
+                daysAgoString = daysDiff + " days ago";
+            }
+            return daysAgoString;
+        }
+    }
+
+    private String getLastExerciseStatsText(SharedPreferences prefs) {
+        if (prefs.getBoolean("hasStats", false))
+            return "";
+        return String.format(getString(R.string.last_run_stats),
+            prefs.getInt(ExerciseData.LAST_TIME, 0),
+            prefs.getFloat(ExerciseData.LAST_DISTANCE, 0),
+            prefs.getFloat(ExerciseData.LAST_SPEED, 0));
+    }
+
     // TODO: REFACTOR
     /**
      * Displays last exercise time and best records
@@ -130,34 +158,15 @@ public class ProfileFragment extends Fragment {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // todo: Put this into records db
-        if (!prefs.getBoolean("hasStats", false)) {
-            lastExercise.setText("You haven't exercised yet!");
-        } else {
-            LocalDate currentDate = LocalDate.now();
-            LocalDate lastExerciseDate = LocalDate.parse(prefs.getString(ExerciseData.LAST_DATE, ""));
-
-            int daysDiff = currentDate.compareTo(lastExerciseDate);
-
-            if (daysDiff == 0) {
-                lastExercise.setText(String.format(getString(R.string.last_run), "today"));
-            } else if (daysDiff == 1) {
-                lastExercise.setText(String.format(getString(R.string.last_run), "yesterday"));
-            } else
-                lastExercise.setText(String.format(getString(R.string.last_run), daysDiff + " days ago"));
-
-            lastExerciseStats.setText(String.format(getString(R.string.last_run_stats),
-                    prefs.getInt(ExerciseData.LAST_TIME, 0),
-                    prefs.getFloat(ExerciseData.LAST_DISTANCE, 0),
-                    prefs.getFloat(ExerciseData.LAST_SPEED, 0)));
-        }
+        lastExercise.setText(getDaysSinceLastRunText(prefs));
+        lastExerciseStats.setText(getLastExerciseStatsText(prefs));
 
         ExerciseDatabaseAdapter dbAdapter = new ExerciseDatabaseAdapter(context);
         dbAdapter.openReadable();
         List<ExerciseData> records = dbAdapter.getAllRecordEntries();
         dbAdapter.close();
 
-        if(records.isEmpty()) {
+        if (records.isEmpty()) {
             bestDistText.setText("No personal bests yet!");
         } else {
             for(ExerciseData record : records) {
