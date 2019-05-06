@@ -132,17 +132,17 @@ public class ProfileFragment extends Fragment {
             } else if (daysDiff > 1) {
                 daysAgoString = daysDiff + " days ago";
             }
-            return daysAgoString;
+            return String.format(getString(R.string.last_run), daysAgoString);
         }
     }
 
     private String getLastExerciseStatsText(SharedPreferences prefs) {
         if (prefs.getBoolean("hasStats", false))
-            return "";
-        return String.format(getString(R.string.last_run_stats),
-            prefs.getInt(ExerciseData.LAST_TIME, 0),
-            prefs.getFloat(ExerciseData.LAST_DISTANCE, 0),
-            prefs.getFloat(ExerciseData.LAST_SPEED, 0));
+            return String.format(getString(R.string.last_run_stats),
+                prefs.getInt(ExerciseData.LAST_TIME, 0),
+                prefs.getFloat(ExerciseData.LAST_DISTANCE, 0),
+                prefs.getFloat(ExerciseData.LAST_SPEED, 0));
+        else return "";
     }
 
     // TODO: REFACTOR
